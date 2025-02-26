@@ -1,13 +1,15 @@
-name: Warn on Direct PRs to Main
+name: Block Direct PRs to Main
 
 on:
   pull_request:
     branches:
-      - main
+      - main  # main으로 가는 PR이 감지되면 실행
 
 jobs:
-  warn-main-pr:
+  block-main-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Warn about PR to Main
-        run: echo "⚠ Warning: You are trying to merge directly into main. Please use staging if applicable."
+      - name: Check PR Target Branch
+        run: |
+          echo "PRs to main branch are not allowed. Please merge into staging first."
+          exit 1

@@ -16,7 +16,7 @@ public class CorsConfig {
                         .allowedOrigins("http://localhost:5173") // 프론트 주소
                         .allowedMethods("*") //모든 HTTP 메서드 허용
                         .allowedHeaders("*") // 모든 헤더 허용
-                        .allowCredentials(false); // 쿠키 비허용 (로그인은 토큰을 헤더에 포함하므로)
+                        .allowCredentials(true); // JWT 토큰을 쿠키에 넣어서 전달하므로
             }
         };
     }

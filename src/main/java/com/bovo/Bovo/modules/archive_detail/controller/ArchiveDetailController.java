@@ -11,11 +11,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController("/archive")
 @RequiredArgsConstructor
 public class ArchiveDetailController {
+//    // 임시 테스트
+//    @GetMapping("/{book_id}")
+//    public String getBookPage(@PathVariable("book_id") int bookId) {
+//        System.out.println(bookId);
+//        return "asd";
+//    }
 
     // 기록 페이지 보기
     @GetMapping("/{book_id}")
     public BookDetailResponseDto getBookPage(@PathVariable("book_id") Long bookId) {
-        return new BookDetailResponseDto();
+        BookDetailResponseDto responseDto = new BookDetailResponseDto();
+//        responseDto.setMessage("asd");
+        // {"message"}
+        return responseDto;
     }
 
 

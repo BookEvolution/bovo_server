@@ -59,7 +59,9 @@ public class UserController {
             return ResponseEntity.ok(response);
         }
 
-        // 토큰 발급 로직 (서비스단)
+        // 토큰 발급 로직
+        String JWT = userService.JwtToken(userService.findByEmail(loginDto.getEmail()));
+        // 쿠키에 JWT 담기
 
 
         Map<String, Object> response = new HashMap<>();

@@ -17,7 +17,7 @@ public interface UserService {
 
     boolean login(LoginDto loginDto);
 
-    String JwtToken(Long userid, String SecretKey, long expireTime);
+    String JwtToken(Long userid);
 
     Long findByEmail(String email);
 }

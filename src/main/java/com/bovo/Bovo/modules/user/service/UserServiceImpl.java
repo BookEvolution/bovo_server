@@ -9,13 +9,9 @@ import com.bovo.Bovo.modules.user.repository.UserAuthRepository;
 import com.bovo.Bovo.modules.user.repository.UserRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +22,10 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JwtProvider jwtProvider;
+    @Value("${jwt.secretkey}")
     private String SecretKey;
+    @Value("${jwt.expired}")
+    private Long expireTime;
 
     @Override
     public boolean existEmail(String email) {
@@ -60,8 +59,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String JwtToken(Long userid, String SecretKey, long expireTime) {
-        return "";
+    public String JwtToken(Long userid) {
+        return jwtProvider.createJwtToken(userid, SecretKey, expireTime);
     }
 
     @Override

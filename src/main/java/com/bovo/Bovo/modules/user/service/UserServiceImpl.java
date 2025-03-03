@@ -1,10 +1,10 @@
 package com.bovo.Bovo.modules.user.service;
 
-import com.bovo.Bovo.modules.user.domain.Provider;
-import com.bovo.Bovo.modules.user.domain.Users;
-import com.bovo.Bovo.modules.user.domain.User_Auth;
-import com.bovo.Bovo.modules.user.dto.LoginDto;
-import com.bovo.Bovo.modules.user.dto.SignupDto;
+import com.bovo.Bovo.common.domain.Provider;
+import com.bovo.Bovo.common.domain.Users;
+import com.bovo.Bovo.common.domain.User_Auth;
+import com.bovo.Bovo.modules.user.dto.request.LoginDto;
+import com.bovo.Bovo.modules.user.dto.request.SignupDto;
 import com.bovo.Bovo.modules.user.repository.UserAuthRepository;
 import com.bovo.Bovo.modules.user.repository.UserRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;

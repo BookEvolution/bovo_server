@@ -1,7 +1,6 @@
 package com.bovo.Bovo.modules.user.repository;
 
-import com.bovo.Bovo.modules.user.domain.Users;
-import com.bovo.Bovo.modules.user.domain.User_Auth;
+import com.bovo.Bovo.common.domain.User_Auth;
 
 import java.util.Optional;
 

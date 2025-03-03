@@ -1,7 +1,7 @@
 package com.bovo.Bovo.modules.user.controller;
 
-import com.bovo.Bovo.modules.user.dto.LoginDto;
-import com.bovo.Bovo.modules.user.dto.SignupDto;
+import com.bovo.Bovo.modules.user.dto.request.LoginDto;
+import com.bovo.Bovo.modules.user.dto.request.SignupDto;
 import com.bovo.Bovo.modules.user.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

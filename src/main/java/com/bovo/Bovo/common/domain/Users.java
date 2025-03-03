@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.domain;
+package com.bovo.Bovo.common.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

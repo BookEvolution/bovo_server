@@ -1,6 +1,6 @@
 package com.bovo.Bovo.modules.user.repository;
 
-import com.bovo.Bovo.modules.user.domain.Users;
+import com.bovo.Bovo.common.domain.Users;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

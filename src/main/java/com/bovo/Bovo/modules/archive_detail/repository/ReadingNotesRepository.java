@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.archive_detail.repository;
 
+import com.bovo.Bovo.modules.archive_detail.domain.MyBooks;
 import com.bovo.Bovo.modules.archive_detail.domain.ReadingNotes;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -14,6 +15,11 @@ public class ReadingNotesRepository {
     public void save(ReadingNotes readingNotes) {
         em.persist(readingNotes);
     }
+
+    public void delete(ReadingNotes readingNotes) {
+        em.remove(readingNotes);
+    }
+
 
     public ReadingNotes memoFindOns(Integer id) {
         return em.find(ReadingNotes.class, id);

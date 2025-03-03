@@ -5,24 +5,27 @@ import com.bovo.Bovo.modules.archive_detail.dto.request.BookUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateResquestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateResquestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.*;
+import com.bovo.Bovo.modules.archive_detail.service.MyBooksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/archive")
+@RestController
+@RequestMapping("/archive")
 @RequiredArgsConstructor
 public class ArchiveDetailController {
-//    // 임시 테스트
+    // 임시 테스트
 //    @GetMapping("/{book_id}")
 //    public String getBookPage(@PathVariable("book_id") int bookId) {
 //        System.out.println(bookId);
 //        return "asd";
 //    }
 
+    private final MyBooksService myBooksService;
     // 기록 페이지 보기
     @GetMapping("/{book_id}")
     public BookDetailResponseDto getBookPage(@PathVariable("book_id") Long bookId) {
         BookDetailResponseDto responseDto = new BookDetailResponseDto();
-//        responseDto.setMessage("asd");
+        responseDto.setMessage("asd");
         // {"message"}
         return responseDto;
     }
@@ -31,7 +34,10 @@ public class ArchiveDetailController {
     // 책 정보 수정
     @PutMapping("/{book_id}/update")
     public BookUpdateResponseDto updateBook(@PathVariable("book_id") Long bookId, @RequestBody BookUpdateRequestDto requestDto) {
-        return new BookUpdateResponseDto();
+        myBooksService.updateMyBook(requestDto);
+        BookUpdateResponseDto responseDto = new BookUpdateResponseDto();
+        responseDto.setMessage("asdsad");
+        return responseDto;
     }
 
     // 책 정보 삭제

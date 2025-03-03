@@ -4,18 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 불필요한 객체 생성 방지
 @Entity
 @Table(name = "users")
-public class User {
+public class Users {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userid;
+    private Long id;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserAuth userAuth;
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User_Auth> userAuth;
 
     @Column(nullable = false)
     private String email;
@@ -36,7 +37,7 @@ public class User {
     private LocalDateTime join_date;
 
     @Builder
-    public User(String profile_picture, String nickname, String email) {
+    public Users(String profile_picture, String nickname, String email) {
         this.profile_picture = profile_picture;
         this.nickname = nickname;
         this.email = email;

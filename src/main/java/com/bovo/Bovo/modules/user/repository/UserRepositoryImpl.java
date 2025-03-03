@@ -1,6 +1,6 @@
 package com.bovo.Bovo.modules.user.repository;
 
-import com.bovo.Bovo.modules.user.domain.User;
+import com.bovo.Bovo.modules.user.domain.Users;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -18,7 +18,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(User user) { // user를 DB(users table)에 저장
+    public Users save(Users user) { // user를 DB(users table)에 저장
         em.persist(user);
         return user;
     }

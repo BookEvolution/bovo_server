@@ -1,8 +1,8 @@
 package com.bovo.Bovo.modules.user.service;
 
 import com.bovo.Bovo.modules.user.domain.Provider;
-import com.bovo.Bovo.modules.user.domain.User;
-import com.bovo.Bovo.modules.user.domain.UserAuth;
+import com.bovo.Bovo.modules.user.domain.Users;
+import com.bovo.Bovo.modules.user.domain.User_Auth;
 import com.bovo.Bovo.modules.user.dto.LoginDto;
 import com.bovo.Bovo.modules.user.dto.SignupDto;
 import com.bovo.Bovo.modules.user.repository.UserAuthRepository;
@@ -41,16 +41,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(SignupDto signupDto) {
-        User user = new User(signupDto.getProfile_picture(), signupDto.getNickname(), signupDto.getEmail());
+        Users user = new Users(signupDto.getProfile_picture(), signupDto.getNickname(), signupDto.getEmail());
         userRepository.save(user);
 
-        UserAuth usera = new UserAuth(user, signupDto.getEmail(), bCryptPasswordEncoder.encode(signupDto.getPassword()), Provider.LOCAL);
+        User_Auth usera = new User_Auth(user, signupDto.getEmail(), bCryptPasswordEncoder.encode(signupDto.getPassword()), Provider.LOCAL);
         userAuthRepository.save(usera);
     }
 
     @Override
     public boolean verifyLogin(LoginDto loginDto) {
-        UserAuth userAuth = userAuthRepository.findByEmail(loginDto.getEmail()).get();
+        User_Auth userAuth = userAuthRepository.findByEmail(loginDto.getEmail()).get();
         String foundPwd=userAuth.getPassword();
         if (!bCryptPasswordEncoder.matches(loginDto.getPassword(), foundPwd)) {
             return false;
@@ -65,9 +65,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long findByEmail(String email) {
-        User user = userAuthRepository.findByEmail(email)
+        Users user = userAuthRepository.findByEmail(email)
                 .get()
-                .getUser();
-        return user.getUserid();
+                .getUsers();
+        return user.getId();
     }
 }

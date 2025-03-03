@@ -28,7 +28,7 @@ public class securityConfig {
                 .formLogin(form -> form.disable()) // 기본 로그인 페이지 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
                 .authorizeHttpRequests(auth -> auth // 요청(URL)에 대한 접근 제어 설정
-                        .requestMatchers("/", "/error", "/static/**").permitAll() // 개발 중 임시 인증 없이 허용
+                        .requestMatchers("/**", "/error", "/static/**").permitAll() // 개발 중 임시 인증 없이 허용
                         .requestMatchers("/login", "/register").permitAll() // 로그인과 회원가입 인증 없이 허용
                         .anyRequest().authenticated() // 위 요청 외에는 인증 필요
                 )

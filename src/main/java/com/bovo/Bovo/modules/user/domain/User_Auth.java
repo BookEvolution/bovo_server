@@ -8,14 +8,14 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 불필요한 객체 생성 방지
 @Entity
 @Table(name = "user_auth")
-public class UserAuth {
+public class User_Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userauthid;
+    private Long auth_id;
 
-    @OneToOne
-    @JoinColumn(name = "userid", nullable = false)
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private Users users;
 
     @Column(nullable = false)
     private String email;
@@ -27,9 +27,11 @@ public class UserAuth {
     @Column(nullable = false)
     private Provider provider;
 
+
+
     @Builder
-    public UserAuth(User user, String email, String password, Provider provider) {
-        this.user = user;
+    public User_Auth(Users users, String email, String password, Provider provider) {
+        this.users = users;
         this.email = email;
         this.password = password;
         this.provider = (provider != null) ? provider : Provider.LOCAL;

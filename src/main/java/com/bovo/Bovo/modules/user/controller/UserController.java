@@ -3,6 +3,8 @@ package com.bovo.Bovo.modules.user.controller;
 import com.bovo.Bovo.modules.user.dto.LoginDto;
 import com.bovo.Bovo.modules.user.dto.SignupDto;
 import com.bovo.Bovo.modules.user.service.UserServiceImpl;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto, HttpServletResponse responseCookie) {
         if (!userService.existEmail(loginDto.getEmail())) {
             Map<String, Object> response = new HashMap<>();
             response.put("status", 404);
@@ -60,13 +62,15 @@ public class UserController {
         }
 
         // 토큰 발급 로직
-        String JWT = userService.GenerateJwtToken(userService.findByEmail(loginDto.getEmail()));
-        // 쿠키에 JWT 담아 전달
-
+        String accessToken = userService.GenerateAccessToken(userService.findByEmail(loginDto.getEmail()));
+        Cookie refreshToken = userService.GenerateRefreshToken(userService.findByEmail(loginDto.getEmail()));
 
         Map<String, Object> response = new HashMap<>();
-        response.put("status", 20);
+        response.put("status", 200);
         response.put("message", "로그인 성공");
+        response.put("accessToken", accessToken);
+        responseCookie.addCookie(refreshToken);
+
         return ResponseEntity.ok(response);
     }
 }

@@ -18,6 +18,7 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User_Auth> userAuth;
 
+    // 카카오 로그인 추가 시 null 허용으로 변경 예정
     @Column(nullable = false)
     private String email;
 

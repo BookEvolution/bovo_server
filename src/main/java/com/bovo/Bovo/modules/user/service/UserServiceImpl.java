@@ -8,6 +8,7 @@ import com.bovo.Bovo.modules.user.dto.SignupDto;
 import com.bovo.Bovo.modules.user.repository.UserAuthRepository;
 import com.bovo.Bovo.modules.user.repository.UserRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,8 +25,10 @@ public class UserServiceImpl implements UserService {
     private final JwtProvider jwtProvider;
     @Value("${jwt.secretkey}")
     private String SecretKey;
-    @Value("${jwt.expired}")
-    private Long expireTime;
+    @Value("${jwt.expiredAccessToken}")
+    private Long expireTimeAccess;
+    @Value("${jwt.expiredRefreshToken}")
+    private Long expireTimeRefresh;
 
     @Override
     public boolean existEmail(String email) {
@@ -59,8 +62,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String GenerateJwtToken(Long userid) {
-        return jwtProvider.createJwtToken(userid, SecretKey, expireTime);
+    public String GenerateAccessToken(Long userid) {
+        return jwtProvider.createAccessToken(userid, SecretKey, expireTimeAccess);
+    }
+
+    @Override
+    public Cookie GenerateRefreshToken(Long userid) {
+        String refreshToken= jwtProvider.createRefreshToken(userid, SecretKey, expireTimeRefresh);
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(3600000*24*7);
+
+        return refreshTokenCookie;
     }
 
     @Override

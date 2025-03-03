@@ -2,6 +2,7 @@ package com.bovo.Bovo.modules.user.service;
 
 import com.bovo.Bovo.modules.user.dto.LoginDto;
 import com.bovo.Bovo.modules.user.dto.SignupDto;
+import jakarta.servlet.http.Cookie;
 
 public interface UserService {
     boolean existEmail(String email);
@@ -12,7 +13,9 @@ public interface UserService {
 
     boolean verifyLogin(LoginDto loginDto);
 
-    String GenerateJwtToken(Long userid);
+    String GenerateAccessToken(Long userid);
+
+    Cookie GenerateRefreshToken(Long userid);
 
     Long findByEmail(String email);
 }

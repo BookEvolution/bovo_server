@@ -23,7 +23,7 @@ public class MyBooks {
 
     @ManyToOne(fetch = FetchType.LAZY) // User와 N:1 관계
     @JoinColumn(name = "user_id", nullable = false)
-    private Users users;
+    private Users user_id;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadingNotes> readingNotes = new ArrayList<>();

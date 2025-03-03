@@ -52,7 +52,7 @@ public class UserController {
             response.put("message", "존재하지 않은 사용자 이메일");
             return ResponseEntity.ok(response);
         }
-        if (!userService.login(loginDto)) {
+        if (!userService.verifyLogin(loginDto)) {
             Map<String, Object> response = new HashMap<>();
             response.put("status", 401);
             response.put("message", "일치하지 않는 비밀번호");
@@ -60,8 +60,8 @@ public class UserController {
         }
 
         // 토큰 발급 로직
-        String JWT = userService.JwtToken(userService.findByEmail(loginDto.getEmail()));
-        // 쿠키에 JWT 담기
+        String JWT = userService.GenerateJwtToken(userService.findByEmail(loginDto.getEmail()));
+        // 쿠키에 JWT 담아 전달
 
 
         Map<String, Object> response = new HashMap<>();

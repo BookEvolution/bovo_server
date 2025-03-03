@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(LoginDto loginDto) {
+    public boolean verifyLogin(LoginDto loginDto) {
         UserAuth userAuth = userAuthRepository.findByEmail(loginDto.getEmail()).get();
         String foundPwd=userAuth.getPassword();
         if (!bCryptPasswordEncoder.matches(loginDto.getPassword(), foundPwd)) {
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String JwtToken(Long userid) {
+    public String GenerateJwtToken(Long userid) {
         return jwtProvider.createJwtToken(userid, SecretKey, expireTime);
     }
 

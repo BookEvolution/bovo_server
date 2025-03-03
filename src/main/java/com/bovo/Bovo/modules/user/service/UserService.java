@@ -15,9 +15,9 @@ public interface UserService {
 
     void save(SignupDto signupDto);
 
-    boolean login(LoginDto loginDto);
+    boolean verifyLogin(LoginDto loginDto);
 
-    String JwtToken(Long userid);
+    String GenerateJwtToken(Long userid);
 
     Long findByEmail(String email);
 }

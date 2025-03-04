@@ -38,3 +38,5 @@ out/
 
 #application.properties
 *.properties
+*.yml
+/src/main/java/com/bovo/Bovo/modules/user/security/GernerateSecretKey.java

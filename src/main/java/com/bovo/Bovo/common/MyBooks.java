@@ -1,12 +1,14 @@
 package com.bovo.Bovo.common;
 
-import com.bovo.Bovo.modules.archive_detail.domain.ReadingStatus;
-import com.bovo.Bovo.modules.archive_detail.domain.Users;
+
+import com.bovo.Bovo.common.domain.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,9 +20,12 @@ public class MyBooks {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //@ManyToOne(fetch = FetchType.LAZY) // User와 N:1 관계
+    @ManyToOne(fetch = FetchType.LAZY) // User와 N:1 관계
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private Users users;
+
+    @OneToMany(mappedBy = "myBooks", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReadingNotes> readingNotesList = new ArrayList<>();
 
     @Column(nullable = false, length = 50)
     private String isbn;

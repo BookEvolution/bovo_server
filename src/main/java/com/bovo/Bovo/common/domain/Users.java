@@ -1,9 +1,11 @@
 package com.bovo.Bovo.common.domain;
 
+import com.bovo.Bovo.common.MyBooks;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,7 +18,10 @@ public class Users {
     private Long id;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User_Auth> userAuth;
+    private List<User_Auth> userAuth = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyBooks> myBooks = new ArrayList<>();
 
     // 카카오 로그인 추가 시 null 허용으로 변경 예정
     @Column(nullable = false)

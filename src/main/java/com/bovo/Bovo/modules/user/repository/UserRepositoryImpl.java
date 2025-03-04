@@ -25,7 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean existNickname(String nickname) {
-        Long num = em.createQuery("SELECT count(user) FROM User user WHERE user.nickname= :nickname", Long.class)
+        Long num = em.createQuery("SELECT count(user) FROM Users user WHERE user.nickname= :nickname", Long.class)
                 .setParameter("nickname", nickname)
                 .getSingleResult();
         return num>0; // db에 nickname이 존재하면 1, 존재하지 않으면 0

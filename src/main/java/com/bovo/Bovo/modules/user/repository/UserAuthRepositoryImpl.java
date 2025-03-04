@@ -34,7 +34,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository{
 
     @Override
     public Optional<User_Auth> findByEmail(String email) { // JPQL을 이용한 email에 해당하는 user 조회
-        User_Auth usera = em.createQuery("SELECT u FROM UserAuth u WHERE u.email= :email", User_Auth.class)
+        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.email= :email", User_Auth.class)
                 .setParameter("email", email)
                 .getSingleResult(); // 카카오 로그인 추가 시 수정 필요
         return Optional.ofNullable(usera);

@@ -17,18 +17,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+@Component
 @Configuration
 @EnableWebSecurity // Spring Security의 보안 설정을 활성화하는 역할
-@RequiredArgsConstructor
 public class securityConfig {
-    private final UserService userService;
-    @Value("${jwt.secretkey}")
     private final String SecretKey;
     private final JwtProvider jwtProvider;
+
+    public securityConfig(@Value("${jwt.secretkey}") String secretKey,
+                          JwtProvider jwtProvider) {
+        SecretKey = secretKey;
+        this.jwtProvider = jwtProvider;
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -50,7 +55,7 @@ public class securityConfig {
 //                        sessionManagement ->
 //                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                )// 세션 사용 x
-//                .addFilterBefore(new JwtFilter(userService, SecretKey, jwtProvider), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtFilter(SecretKey, jwtProvider), UsernamePasswordAuthenticationFilter.class)
 //                // Jwt 인증 필터 추가
                 .cors(cors -> cors.configurationSource(corsConfig()))
                 .build();

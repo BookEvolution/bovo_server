@@ -2,6 +2,7 @@ package com.bovo.Bovo.modules.user.controller;
 
 import com.bovo.Bovo.modules.user.dto.request.LoginDto;
 import com.bovo.Bovo.modules.user.dto.request.SignupDto;
+import com.bovo.Bovo.modules.user.service.UserService;
 import com.bovo.Bovo.modules.user.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> signup(@RequestBody SignupDto signupDto) {

@@ -23,12 +23,25 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JwtProvider jwtProvider;
-    @Value("${jwt.secretkey}")
     private String SecretKey;
-    @Value("${jwt.expiredAccessToken}")
     private Long expireTimeAccess;
-    @Value("${jwt.expiredRefreshToken}")
     private Long expireTimeRefresh;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           UserAuthRepository userAuthRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           JwtProvider jwtProvider,
+                           @Value("${jwt.secretkey}") String secretKey,
+                           @Value("${jwt.expiredAccessToken}") Long expireTimeAccess,
+                           @Value("${jwt.expiredRefreshToken}") Long expireTimeRefresh) {
+        this.userRepository = userRepository;
+        this.userAuthRepository = userAuthRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtProvider = jwtProvider;
+        SecretKey = secretKey;
+        this.expireTimeAccess = expireTimeAccess;
+        this.expireTimeRefresh = expireTimeRefresh;
+    }
 
     @Override
     public boolean existEmail(String email) {

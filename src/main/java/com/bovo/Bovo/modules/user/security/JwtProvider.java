@@ -54,7 +54,7 @@ public class JwtProvider {
         try {
             JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
             Jwt jwt = jwtDecoder.decode(refreshToken);
-            return 201;
+            return 200;
         } catch (JwtException e) {
             return 403;
         }

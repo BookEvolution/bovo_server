@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long verifyRefreshToken(String refreshToken) {
         if (jwtProvider.ExpiredRefreshToken(refreshToken, SecretKey)==403) {
-            return Long.valueOf(403);
+            return Long.valueOf("403");
         } else {
             return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
         }

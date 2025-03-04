@@ -23,7 +23,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     public JwtFilter(@Value("${jwt.secretkey}") String secretKey, JwtProvider jwtProvider) {
-        SecretKey = secretKey;
+        this.SecretKey = secretKey;
         this.jwtProvider = jwtProvider;
     }
 

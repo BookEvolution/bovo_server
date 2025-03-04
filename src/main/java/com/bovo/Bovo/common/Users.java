@@ -1,6 +1,5 @@
-package com.bovo.Bovo.common.domain;
+package com.bovo.Bovo.common;
 
-import com.bovo.Bovo.common.MyBooks;
 import jakarta.persistence.*;
 import lombok.*;
 

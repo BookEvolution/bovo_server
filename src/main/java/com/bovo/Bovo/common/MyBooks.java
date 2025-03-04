@@ -1,7 +1,6 @@
 package com.bovo.Bovo.common;
 
 
-import com.bovo.Bovo.common.domain.Users;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;

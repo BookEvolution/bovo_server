@@ -19,8 +19,9 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT 적용
     private Integer id;
 
-//    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Participation> participation = new ArrayList<>();
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Participation> participation = new ArrayList<>();
+
 
 
     @Column(name = "chat_name", length = 30, nullable = false)

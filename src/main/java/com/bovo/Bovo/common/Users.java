@@ -22,6 +22,15 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MyBooks> myBooks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Participation> participations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReadingNotes> readingNotes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CalendarEvent> calendarEvents = new ArrayList<>();
+
     // 카카오 로그인 추가 시 null 허용으로 변경 예정
     @Column(nullable = false)
     private String email;

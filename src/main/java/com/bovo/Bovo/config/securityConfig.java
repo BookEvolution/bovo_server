@@ -31,7 +31,7 @@ public class securityConfig {
 
     public securityConfig(@Value("${jwt.secretkey}") String secretKey,
                           JwtProvider jwtProvider) {
-        SecretKey = secretKey;
+        this.SecretKey = secretKey;
         this.jwtProvider = jwtProvider;
     }
 

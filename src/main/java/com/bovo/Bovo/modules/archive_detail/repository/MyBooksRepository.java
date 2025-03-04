@@ -11,6 +11,13 @@ public class MyBooksRepository {
     @PersistenceContext
     private EntityManager em;
 
+    public void save(MyBooks myBooks){
+        em.persist(myBooks);
+    }
+
+    public void delete(MyBooks myBooks) {
+        em.remove(myBooks);
+    }
 
     public MyBooks findOne(Integer id) {
         return em.find(MyBooks.class, id);

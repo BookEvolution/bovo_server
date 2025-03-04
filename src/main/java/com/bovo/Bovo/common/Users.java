@@ -23,7 +23,7 @@ public class Users {
     private List<MyBooks> myBooks = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Participation> participations = new ArrayList<>();
+    private List<Participation> participation = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadingNotes> readingNotes = new ArrayList<>();

@@ -21,7 +21,7 @@ public class ReadingNotesRepository {
     }
 
 
-    public ReadingNotes memoFindOns(Integer id) {
+    public ReadingNotes memoFindOne(Integer id) {
         return em.find(ReadingNotes.class, id);
     }
 

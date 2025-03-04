@@ -22,7 +22,7 @@ public class JwtProvider {
                 .claim("userid", userid)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeAccess))
-                .signWith(SignatureAlgorithm.HS256, Keys.hmacShaKeyFor(SecretKey.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
     }
 
@@ -32,7 +32,7 @@ public class JwtProvider {
                 .claim("userid", userid)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeRefresh))
-                .signWith(SignatureAlgorithm.HS256, Keys.hmacShaKeyFor(SecretKey.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
     }
 
@@ -64,7 +64,7 @@ public class JwtProvider {
     public Long ExtractUserIdFromRefreshToken(String refreshToken, String SecretKey) {
         JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
         Jwt jwt = jwtDecoder.decode(refreshToken);
-        return jwt.getClaim("userId"); // "userId" 클레임에서 값 추출
+        return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
     }
 
     private JwtDecoder createJwtDecoder(String SecretKey) {

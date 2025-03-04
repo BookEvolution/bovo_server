@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
@@ -23,9 +22,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JwtProvider jwtProvider;
-    private String SecretKey;
-    private Long expireTimeAccess;
-    private Long expireTimeRefresh;
+    private final String SecretKey;
+    private final Long expireTimeAccess;
+    private final Long expireTimeRefresh;
 
     public UserServiceImpl(UserRepository userRepository,
                            UserAuthRepository userAuthRepository,
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
         this.userAuthRepository = userAuthRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtProvider = jwtProvider;
-        SecretKey = secretKey;
+        this.SecretKey = secretKey;
         this.expireTimeAccess = expireTimeAccess;
         this.expireTimeRefresh = expireTimeRefresh;
     }

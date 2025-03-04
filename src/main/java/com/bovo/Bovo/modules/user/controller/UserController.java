@@ -73,4 +73,33 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, Object>> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
+        Long verify = userService.verifyRefreshToken(refreshToken);
+
+        if (refreshToken == null || verify == Long.parseLong("403")) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", 403);
+            response.put("message", "리프레쉬 토큰 만료, 재로그인 권장");
+            return ResponseEntity.ok(response);
+        }
+        String accessToken = userService.GenerateAccessToken(verify);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 200);
+        response.put("message", "엑세스 토큰 재발급 완료");
+        response.put("accessToken", accessToken);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        return ResponseEntity.ok("로그아웃 되었습니다");
+    }
+
+    @DeleteMapping("/my-page/delete")
+    public ResponseEntity<String> userdelete() {
+        return ResponseEntity.ok("회원 탈퇴");
+    }
 }

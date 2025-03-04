@@ -52,6 +52,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long findByEmail(String email) {
+        Users user = userAuthRepository.findByEmail(email)
+                .get()
+                .getUsers();
+        return user.getId();
+    }
+
+    @Override
     public boolean verifyLogin(LoginDto loginDto) {
         User_Auth userAuth = userAuthRepository.findByEmail(loginDto.getEmail()).get();
         String foundPwd=userAuth.getPassword();
@@ -79,10 +87,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long findByEmail(String email) {
-        Users user = userAuthRepository.findByEmail(email)
-                .get()
-                .getUsers();
-        return user.getId();
+    public Long verifyRefreshToken(String refreshToken) {
+        if (jwtProvider.ExpiredRefreshToken(refreshToken, SecretKey)==403) {
+            return Long.valueOf(403);
+        } else {
+            return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
+        }
     }
+
 }

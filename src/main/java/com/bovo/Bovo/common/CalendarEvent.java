@@ -24,7 +24,7 @@ public class CalendarEvent {
     private Users user;
 
     //@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", nullable = true)
+    @JoinColumn(name = "book_id")
     private MyBooks book;
 
     @Column(nullable = false)

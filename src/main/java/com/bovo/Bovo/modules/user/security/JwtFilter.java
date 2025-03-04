@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.user.security;
 
+import com.bovo.Bovo.modules.user.service.UserService;
 import com.bovo.Bovo.modules.user.service.UserServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     @Value("${jwt.secretkey}")
     private final String SecretKey;
     private final JwtProvider jwtProvider;

@@ -2,6 +2,7 @@ package com.bovo.Bovo.config;
 
 import com.bovo.Bovo.modules.user.security.JwtFilter;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
+import com.bovo.Bovo.modules.user.service.UserService;
 import com.bovo.Bovo.modules.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity // Spring Security의 보안 설정을 활성화하는 역할
 @RequiredArgsConstructor
 public class securityConfig {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     @Value("${jwt.secretkey}")
     private final String SecretKey;
     private final JwtProvider jwtProvider;

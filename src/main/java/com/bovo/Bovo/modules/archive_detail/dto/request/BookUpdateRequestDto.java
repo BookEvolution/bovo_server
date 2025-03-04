@@ -16,10 +16,10 @@ public class BookUpdateRequestDto {
     private String status;
 
     @JsonProperty("start_date")
-    private LocalDate startDate;
+    private String startDate;
 
     @JsonProperty("end_date")
-    private LocalDate endDate;
+    private String endDate;
 
     private int star;
 }

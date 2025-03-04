@@ -1,11 +1,14 @@
-package com.bovo.Bovo.modules.archive_detail.domain;
+package com.bovo.Bovo.common;
 
+import com.bovo.Bovo.modules.archive_detail.domain.MyBooks;
+import com.bovo.Bovo.modules.archive_detail.domain.Users;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 
-@Entity
+//@Entity
 @Table(name = "reading_notes")
 @Getter
 @Setter
@@ -18,16 +21,16 @@ public class ReadingNotes {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT 설정
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 책과 N:1 관계
-    @JoinColumn(name = "book_id", nullable = false)
-    private MyBooks book;
-
-    @ManyToOne(fetch = FetchType.LAZY) // 유저와 N:1 관계
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users users;
+//    @ManyToOne(fetch = FetchType.LAZY) // 책과 N:1 관계
+//    @JoinColumn(name = "book_id", nullable = false)
+//    private MyBooks book;
+//
+//    @ManyToOne(fetch = FetchType.LAZY) // 유저와 N:1 관계
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private Users users;
 
     @Column(length = 255)
-    private String memoQuestion; // 질문(필요할 수도 있고, 아닐 수도 있음)
+    private String memoQuestion;
 
     @Column(columnDefinition = "TEXT")
     private String memoAnswer; // 답변 (내용)

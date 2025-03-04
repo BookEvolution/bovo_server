@@ -1,8 +1,11 @@
 package com.bovo.Bovo.modules.archive_detail.dto.response;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookUpdateResponseDto {
     private String message;
 }

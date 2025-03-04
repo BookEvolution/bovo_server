@@ -29,6 +29,7 @@ public class ReadingNotes {
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
+
     @Column(length = 255)
     private String memoQuestion;
 

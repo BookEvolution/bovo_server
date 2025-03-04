@@ -23,6 +23,7 @@ public class ChatRoom {
     private List<Participation> participation = new ArrayList<>();
 
 
+
     @Column(name = "chat_name", length = 30, nullable = false)
     private String chatName;
 

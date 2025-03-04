@@ -31,6 +31,7 @@ public class Participation {
     @Column(name = "answer", length = 255)
     private String answer; // 비밀방 답변
 
+
     // ENUM 타입 정의
     public enum LeaderStatus {
         YES, NO

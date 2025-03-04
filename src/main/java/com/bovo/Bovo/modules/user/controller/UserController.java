@@ -95,6 +95,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
+
         return ResponseEntity.ok("로그아웃 되었습니다");
     }
 

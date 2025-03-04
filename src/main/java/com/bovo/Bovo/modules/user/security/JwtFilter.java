@@ -40,10 +40,21 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
             return;
         } else if (result == 401) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "엑세스 토큰 만료");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            String jsonResponse = "{\"status\": \"401\", \"message\": \"엑세스 토큰 만료\"}";
+            response.getWriter().write(jsonResponse);
+
             return; // 엑세스 토큰 만료 -> 리프레쉬 토큰
         } else if (result == 403) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "재로그인 권장");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            String jsonResponse = "{\"status\": \"403\", \"message\": \"재로그인 권장\"}";
+            response.getWriter().write(jsonResponse);
             return; // 로그아웃 후 재로그인 권장
         }
 

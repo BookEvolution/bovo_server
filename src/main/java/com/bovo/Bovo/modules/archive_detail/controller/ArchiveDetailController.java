@@ -1,8 +1,8 @@
 package com.bovo.Bovo.modules.archive_detail.controller;
 
 
-import com.bovo.Bovo.modules.archive_detail.domain.MyBooks;
-import com.bovo.Bovo.modules.archive_detail.domain.ReadingNotes;
+import com.bovo.Bovo.common.MyBooks;
+import com.bovo.Bovo.common.ReadingNotes;
 import com.bovo.Bovo.modules.archive_detail.dto.request.BookUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;

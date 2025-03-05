@@ -1,7 +1,7 @@
 package com.bovo.Bovo.modules.archive_detail.service;
 
-import com.bovo.Bovo.modules.archive_detail.domain.MyBooks;
-import com.bovo.Bovo.modules.archive_detail.domain.ReadingNotes;
+import com.bovo.Bovo.common.MyBooks;
+import com.bovo.Bovo.common.ReadingNotes;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.MemoDTO;
@@ -27,7 +27,7 @@ public class ReadingNotesService {
     @Transactional
     public void save(Integer bookId, Integer userId, MemoCreateRequestDto requestDto){
         ReadingNotes memo = ReadingNotes.builder()
-                .book(myBooksService.myBookInfo(bookId, userId))
+                .myBooks(myBooksService.myBookInfo(bookId, userId))
                 .users(usersRepository.findOne(userId))
                 .memoQuestion(requestDto.getMemoA())
                 .memoAnswer(requestDto.getMemoA())
@@ -39,7 +39,7 @@ public class ReadingNotesService {
     public List<ReadingNotes> memosInfoByBook(Integer bookId, Integer userId) {
         MyBooks book = myBooksService.myBookInfo(bookId, userId);
 
-        List<ReadingNotes> readingNotes = book.getReadingNotes();
+        List<ReadingNotes> readingNotes = book.getReadingNotesList();
 
         return readingNotes;
     }
@@ -50,7 +50,7 @@ public class ReadingNotesService {
         ReadingNotes memo = readingNotesRepository.memoFindOne(memoId);
 
         //책 검증
-        boolean validation = memo.getBook().equals(myBooksService.myBookInfo(bookId, userId));
+        boolean validation = memo.getMyBooks().equals(myBooksService.myBookInfo(bookId, userId));
 
         //디티오 매핑
         if(validation) {

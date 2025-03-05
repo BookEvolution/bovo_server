@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+//@Entity
 @Table(name = "users")
 @Getter @Setter
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class Users {
     private List<MyBooks> myBooks = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReadingNotes> readingNotes = new ArrayList<>();
+    private List<ReadingNotes> readingNotesList = new ArrayList<>();
 
 //    @Column(nullable = false, length = 255)
 //    private String pass;

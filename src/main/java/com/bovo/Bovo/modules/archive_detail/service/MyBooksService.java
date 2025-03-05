@@ -1,8 +1,8 @@
 package com.bovo.Bovo.modules.archive_detail.service;
 
-import com.bovo.Bovo.modules.archive_detail.domain.MyBooks;
-import com.bovo.Bovo.modules.archive_detail.domain.ReadingNotes;
-import com.bovo.Bovo.modules.archive_detail.domain.ReadingStatus;
+import com.bovo.Bovo.common.MyBooks;
+import com.bovo.Bovo.common.ReadingNotes;
+import com.bovo.Bovo.common.ReadingStatus;
 import com.bovo.Bovo.modules.archive_detail.dto.request.BookUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.BookDTO;
 import com.bovo.Bovo.modules.archive_detail.repository.MyBooksRepository;
@@ -46,7 +46,7 @@ public class MyBooksService {
                 .star(book.getBookScore().multiply(BigDecimal.TWO).intValue())
                 .startDate(localDateToString(book.getReadingStartDate()))
                 .endDate(localDateToString(book.getReadingEndDate()))
-                .status(book.getIsCompleteReading().getDescription())
+                .status(book.getReadingStatus().getDescription())
                 .build();
 
 
@@ -67,7 +67,7 @@ public class MyBooksService {
 
         //dto정보로 업데이트 하기
         //setIsCompleteReading(book, requestDto.getStatus());
-        book.setIsCompleteReading(setIsCompleteReading(requestDto.getStatus()));
+        book.setReadingStatus(setIsCompleteReading(requestDto.getStatus()));
         book.setReadingStartDate(stringToLocalDate(requestDto.getStartDate()));
         book.setReadingEndDate(stringToLocalDate(requestDto.getEndDate()));
         setBookScore(book, requestDto);

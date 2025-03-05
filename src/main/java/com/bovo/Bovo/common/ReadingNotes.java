@@ -1,7 +1,7 @@
 package com.bovo.Bovo.common;
 
-import com.bovo.Bovo.modules.archive_detail.domain.MyBooks;
-import com.bovo.Bovo.modules.archive_detail.domain.Users;
+import com.bovo.Bovo.common.MyBooks;
+import com.bovo.Bovo.common.Users;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;

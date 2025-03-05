@@ -24,7 +24,7 @@ public class Medal {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
-    private MedalType medal;
+    private MedalType medalType;
 
     @Column(nullable = true)
     private LocalDate medalDate;

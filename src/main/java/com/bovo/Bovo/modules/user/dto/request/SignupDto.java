@@ -22,7 +22,4 @@ public class SignupDto {
 
     @NotNull(message = "")
     private String password;
-
-    @NotNull(message = "")
-    private String pwd_check;
 }

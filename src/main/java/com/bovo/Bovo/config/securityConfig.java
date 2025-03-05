@@ -41,7 +41,8 @@ public class securityConfig {
                 .authorizeHttpRequests(auth -> { // 요청(URL)에 대한 접근 제어 설정
                     auth.requestMatchers("/**", "/error", "/static/**").permitAll(); // 개발 중 임시 인증 없이 허용
 //                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Preflight 요청 허용
-//                    auth.requestMatchers("/","/login", "/register").permitAll(); // 로그인과 회원가입 인증 없이 허용
+//                    auth.requestMatchers("/","/login", "/register","/refresh").permitAll(); // 로그인과 회원가입 인증 없이 허용
+//                    auth.requestMatchers(HttpMethod.GET, "/**").permitAll();
 //                    auth.requestMatchers(HttpMethod.POST, "/**").authenticated(); // 위 요청 외에는 인증 필요
                 })
 //                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -55,6 +56,7 @@ public class securityConfig {
     public CorsConfigurationSource corsConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://localhost:5173"); // 프론트 주소
+//        corsConfiguration.addAllowedOrigin("https://bovo-client.vercel.app");
         corsConfiguration.addAllowedMethod("*"); //모든 HTTP 메서드 허용
         corsConfiguration.addAllowedHeader("*"); // 모든 헤더 허용
         corsConfiguration.setAllowCredentials(true); // JWT 토큰을 쿠키에 넣어서 전달하므로

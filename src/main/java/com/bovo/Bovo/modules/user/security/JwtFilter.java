@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     private final String SecretKey;
@@ -29,6 +30,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        final String requestURI = request.getRequestURI();
+
+        if (requestURI.equals("/") || requestURI.equals("/refresh") || requestURI.contains("/login") || requestURI.contains("/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         logger.info("authorization: "+ authorization);
 

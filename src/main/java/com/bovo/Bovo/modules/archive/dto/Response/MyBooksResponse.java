@@ -14,5 +14,5 @@ import java.util.List;
 @Builder
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MyBooksResponse {
-    private List<MyBooksDto> myBooksList;
+    private List<MyBooksDto> books;
 }

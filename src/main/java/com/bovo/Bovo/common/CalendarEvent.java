@@ -1,6 +1,6 @@
 package com.bovo.Bovo.common;
 
-import com.bovo.Bovo.modules.archive_detail.domain.Users;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,13 +19,13 @@ public class CalendarEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private Users users;
 
-    //@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
-    private MyBooks book;
+    private MyBooks myBooks;
 
     @Column(nullable = false)
     private LocalDate eventDate;

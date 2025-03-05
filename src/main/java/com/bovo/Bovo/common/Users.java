@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "users")
 public class Users {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User_Auth> userAuth = new ArrayList<>();
@@ -29,7 +29,13 @@ public class Users {
     private List<ReadingNotes> readingNotes = new ArrayList<>();
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CalendarEvent> calendarEvents = new ArrayList<>();
+    private List<CalendarEvent> calendarEvent = new ArrayList<>();
+
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Medal medal;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MissionComplete> missionComplete = new ArrayList<>();
 
     // 카카오 로그인 추가 시 null 허용으로 변경 예정
     @Column(nullable = false)

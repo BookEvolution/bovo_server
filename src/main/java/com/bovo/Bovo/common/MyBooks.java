@@ -27,6 +27,12 @@ public class MyBooks {
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
+    @OneToMany(mappedBy = "myBooks", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ReadingNotes> readingNotesList = new ArrayList<>(); // *********
+
+    @OneToMany(mappedBy = "myBooks", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<CalendarEvent> calendarEvent = new ArrayList<>();
+
     @Column(nullable = false, length = 50)
     private String isbn;
 
@@ -68,9 +74,6 @@ public class MyBooks {
 
     @Column(nullable = false)
     private LocalDate recentlyCorrectionDate;
-
-    @OneToMany(mappedBy = "myBooks", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ReadingNotes> readingNotesList = new ArrayList<>();
 
 
 }

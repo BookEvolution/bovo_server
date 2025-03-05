@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "mission_list")
 @Getter
@@ -16,7 +19,10 @@ public class MissionList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
+    @OneToMany(mappedBy = "missionList", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MissionComplete> missionComplete = new ArrayList<>();
 
     @Column(nullable = false)
     private String missionName;

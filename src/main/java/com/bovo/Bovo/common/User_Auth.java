@@ -11,16 +11,16 @@ import lombok.*;
 public class User_Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long auth_id;
+    private Integer auth_id;
 
-    @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Enumerated(EnumType.STRING)

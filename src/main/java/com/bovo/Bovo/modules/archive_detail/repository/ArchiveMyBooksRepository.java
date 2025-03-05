@@ -6,7 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MyBooksRepository {
+public class ArchiveMyBooksRepository {
 
     @PersistenceContext
     private EntityManager em;

@@ -21,7 +21,7 @@ public class MyBooksServiceImpl implements MyBooksService {
     }
 
     @Override
-    public MyBooksResponse getMyBooks(Long userId) {
+    public MyBooksResponse getMyBooks(Integer userId) {
         // 사용자 ID에 해당하는 내 서재의 책 목록을 조회
         List<MyBooks> myBooksList = myBooksRepository.findByUserId(userId);
 

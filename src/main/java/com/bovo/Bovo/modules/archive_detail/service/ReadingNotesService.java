@@ -5,8 +5,8 @@ import com.bovo.Bovo.common.ReadingNotes;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.MemoDTO;
-import com.bovo.Bovo.modules.archive_detail.repository.ReadingNotesRepository;
-import com.bovo.Bovo.modules.archive_detail.repository.UsersRepository;
+import com.bovo.Bovo.modules.archive_detail.repository.ArchiveReadingNotesRepository;
+import com.bovo.Bovo.modules.archive_detail.repository.ArchiveUsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReadingNotesService {
 
-    private final ReadingNotesRepository readingNotesRepository;
-    private final MyBooksService myBooksService;
-    private final UsersRepository usersRepository;
+    private final ArchiveReadingNotesRepository readingNotesRepository;
+    private final ArchiveMyBooksService myBooksService;
+    private final ArchiveUsersRepository usersRepository;
 
     //메모 저장하기
     @Transactional

@@ -7,7 +7,7 @@ import com.bovo.Bovo.modules.archive_detail.dto.request.BookUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.*;
-import com.bovo.Bovo.modules.archive_detail.service.MyBooksService;
+import com.bovo.Bovo.modules.archive_detail.service.ArchiveMyBooksService;
 import com.bovo.Bovo.modules.archive_detail.service.ReadingNotesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArchiveDetailController {
 
-    private final MyBooksService myBooksService;
+    private final ArchiveMyBooksService myBooksService;
     private final ReadingNotesService readingNotesService;
     // 임시 테스트
 //    @GetMapping("/{book_id}")

@@ -5,8 +5,8 @@ import com.bovo.Bovo.common.ReadingNotes;
 import com.bovo.Bovo.common.ReadingStatus;
 import com.bovo.Bovo.modules.archive_detail.dto.request.BookUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.BookDTO;
-import com.bovo.Bovo.modules.archive_detail.repository.MyBooksRepository;
-import com.bovo.Bovo.modules.archive_detail.repository.ReadingNotesRepository;
+import com.bovo.Bovo.modules.archive_detail.repository.ArchiveMyBooksRepository;
+import com.bovo.Bovo.modules.archive_detail.repository.ArchiveReadingNotesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,10 @@ import java.util.Objects;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
-public class MyBooksService {
+public class ArchiveMyBooksService {
 
-    private final ReadingNotesRepository readingNotesRepository;
-    private final MyBooksRepository myBooksRepository;
+    private final ArchiveReadingNotesRepository readingNotesRepository;
+    private final ArchiveMyBooksRepository myBooksRepository;
 
     //책 id, 유저 id 이용해서 책 정보 가져오기
     public MyBooks myBookInfo(Integer bookId, Integer userId) {

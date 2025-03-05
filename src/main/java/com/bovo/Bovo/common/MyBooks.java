@@ -23,7 +23,7 @@ public class MyBooks {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne// User와 N:1 관계
+    @ManyToOne(fetch = FetchType.LAZY) // User와 N:1 관계
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 

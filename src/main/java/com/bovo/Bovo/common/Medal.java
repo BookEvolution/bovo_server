@@ -21,10 +21,7 @@ public class Medal {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Medal medal;
-
-    @Column(nullable = false)
-    private Long userId;
+    private Users users;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+//@Entity
 @Table(name = "my_books")
 @Getter
 @Setter
@@ -25,8 +25,8 @@ public class MyBooks {
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReadingNotes> readingNotes = new ArrayList<>();
+    @OneToMany(mappedBy = "myBooks", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReadingNotes> readingNotesList = new ArrayList<>();
 
     @Column(nullable = false, length = 50)
     private String isbn;

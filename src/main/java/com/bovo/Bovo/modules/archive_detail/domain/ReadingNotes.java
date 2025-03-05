@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Entity
+//@Entity
 @Table(name = "reading_notes")
 @Getter
 @Setter
@@ -20,7 +20,7 @@ public class ReadingNotes {
 
     @ManyToOne(fetch = FetchType.LAZY) // 책과 N:1 관계
     @JoinColumn(name = "book_id", nullable = false)
-    private MyBooks book;
+    private MyBooks myBooks;
 
     @ManyToOne(fetch = FetchType.LAZY) // 유저와 N:1 관계
     @JoinColumn(name = "user_id", nullable = false)

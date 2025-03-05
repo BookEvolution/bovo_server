@@ -1,6 +1,6 @@
 package com.bovo.Bovo.modules.archive_detail.repository;
 
-import com.bovo.Bovo.modules.archive_detail.domain.Users;
+import com.bovo.Bovo.common.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;

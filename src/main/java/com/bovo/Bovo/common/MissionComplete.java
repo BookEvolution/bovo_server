@@ -25,7 +25,7 @@ public class MissionComplete {
 
     @ManyToOne
     @JoinColumn(name = "mission_id", nullable = false)
-    private MissionList missionId;
+    private MissionList missionList;
 
     @Column(nullable = false)
     private LocalDateTime completedTime;

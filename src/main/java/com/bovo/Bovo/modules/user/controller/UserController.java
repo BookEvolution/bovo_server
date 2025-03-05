@@ -77,9 +77,9 @@ public class UserController {
 
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, Object>> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken) {
-        Long verify = userService.verifyRefreshToken(refreshToken);
+        Integer verify = userService.verifyRefreshToken(refreshToken);
 
-        if (refreshToken == null || verify == Long.parseLong("403")) {
+        if (refreshToken == null || verify == 403) {
             Map<String, Object> response = new HashMap<>();
             response.put("status", 403);
             response.put("message", "리프레쉬 토큰 만료, 재로그인 권장");

@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtProvider {
 
     // 엑세스 토큰 발급
-    public String createAccessToken(Long userid, String SecretKey, long expireTimeAccess) {
+    public String createAccessToken(Integer userid, String SecretKey, long expireTimeAccess) {
         return Jwts.builder()
                 .claim("userid", userid)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -27,7 +27,7 @@ public class JwtProvider {
     }
 
     // 리프레쉬 토큰 발급
-    public String createRefreshToken(Long userid, String SecretKey, long expireTimeRefresh) {
+    public String createRefreshToken(Integer userid, String SecretKey, long expireTimeRefresh) {
         return Jwts.builder()
                 .claim("userid", userid)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -61,7 +61,7 @@ public class JwtProvider {
     }
 
     // 리프레쉬 토큰에서 사용자 정보(UserId) 추출
-    public Long ExtractUserIdFromRefreshToken(String refreshToken, String SecretKey) {
+    public Integer ExtractUserIdFromRefreshToken(String refreshToken, String SecretKey) {
         JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
         Jwt jwt = jwtDecoder.decode(refreshToken);
         return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출

@@ -11,14 +11,14 @@ public interface UserService {
 
     void save(SignupDto signupDto);
 
-    Long findByEmail(String email);
+    Integer findByEmail(String email);
 
     boolean verifyLogin(LoginDto loginDto);
 
-    String GenerateAccessToken(Long userid);
+    String GenerateAccessToken(Integer userid);
 
-    Cookie GenerateRefreshToken(Long userid);
+    Cookie GenerateRefreshToken(Integer userid);
 
-    Long verifyRefreshToken(String refreshToken);
+    Integer verifyRefreshToken(String refreshToken);
 
 }

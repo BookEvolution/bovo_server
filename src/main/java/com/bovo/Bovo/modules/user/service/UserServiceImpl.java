@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long findByEmail(String email) {
+    public Integer findByEmail(String email) {
         Users user = userAuthRepository.findByEmail(email)
                 .get()
                 .getUsers();
@@ -82,12 +82,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String GenerateAccessToken(Long userid) {
+    public String GenerateAccessToken(Integer userid) {
         return jwtProvider.createAccessToken(userid, SecretKey, expireTimeAccess);
     }
 
     @Override
-    public Cookie GenerateRefreshToken(Long userid) {
+    public Cookie GenerateRefreshToken(Integer userid) {
         String refreshToken= jwtProvider.createRefreshToken(userid, SecretKey, expireTimeRefresh);
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
@@ -99,9 +99,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long verifyRefreshToken(String refreshToken) {
+    public Integer verifyRefreshToken(String refreshToken) {
         if (jwtProvider.ExpiredRefreshToken(refreshToken, SecretKey)==403) {
-            return Long.valueOf("403");
+            return 403;
         } else {
             return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
         }

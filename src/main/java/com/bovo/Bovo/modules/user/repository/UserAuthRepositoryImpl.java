@@ -54,7 +54,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository{
 
     @Override
     public void updateRefreshToken(Integer userId, String refreshToken) {
-        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.user.id= :userId", User_Auth.class)
+        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.users.id= :userId", User_Auth.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
         if (usera != null) {

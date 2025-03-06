@@ -41,7 +41,7 @@ public class securityConfig {
                 .authorizeHttpRequests(auth -> { // 요청(URL)에 대한 접근 제어 설정
                     auth.requestMatchers("/**", "/error", "/static/**").permitAll(); // 개발 중 임시 인증 없이 허용
 //                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Preflight 요청 허용
-//                    auth.requestMatchers("/","/login", "/register","/refresh", "/logout").permitAll(); // 로그인과 회원가입 인증 없이 허용
+//                    auth.requestMatchers("/","/login", "/register","/refresh", "/logout", "/register/nickname", "/register/email").permitAll(); // 로그인과 회원가입 인증 없이 허용
 //                    auth.requestMatchers(HttpMethod.GET, "/**").permitAll();
 //                    auth.requestMatchers(HttpMethod.POST, "/**").authenticated(); // 위 요청 외에는 인증 필요
                 })

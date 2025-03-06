@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.user.security;
 
+import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import com.bovo.Bovo.modules.user.service.UserService;
 import com.bovo.Bovo.modules.user.service.UserServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -49,6 +51,14 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = authorization.split(" ")[1];
         int result = jwtProvider.ExpiredAccessToken(accessToken, SecretKey);
         if (result == 201) {
+            Integer userId = jwtProvider.ExtractUserIdFromAccessToken(accessToken, SecretKey); // 토큰에서 userId 추출
+            AuthenticatedUserId ExtractedUserId = new AuthenticatedUserId(userId); // 추출한 userId를 DTO에 저장
+            // AbstractAuthenticationToken을 상속한 CustomAuthenticationToken로 userPrincipal을 매개변수로 전달하여 인증 객체 생성
+            AuthenticationToken authenticationToken = new AuthenticationToken(ExtractedUserId);
+
+            // SecurityContextHolder에 저장
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
             filterChain.doFilter(request,response);
             return;
         } else if (result == 401) {

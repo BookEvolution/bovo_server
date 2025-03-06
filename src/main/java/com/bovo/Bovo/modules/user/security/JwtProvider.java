@@ -2,7 +2,6 @@ package com.bovo.Bovo.modules.user.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -58,6 +57,13 @@ public class JwtProvider {
         } catch (JwtException e) {
             return 403;
         }
+    }
+
+    // 엑세스 토큰에서 사용자 정보(UserId) 추출
+    public Integer ExtractUserIdFromAccessToken(String accessToken, String SecretKey) {
+        JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
+        Jwt jwt = jwtDecoder.decode(accessToken);
+        return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
     }
 
     // 리프레쉬 토큰에서 사용자 정보(UserId) 추출

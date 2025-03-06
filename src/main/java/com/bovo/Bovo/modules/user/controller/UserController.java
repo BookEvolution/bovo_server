@@ -47,7 +47,7 @@ public class UserController {
             return new JwtTokenResponseDto(404, "존재하지 않은 사용자 이메일", null);
         }
         if (!userService.verifyLogin(loginDto)) {
-            return new JwtTokenResponseDto(404, "일치하지 않는 비밀번호", null);
+            return new JwtTokenResponseDto(401, "일치하지 않는 비밀번호", null);
         }
 
         // 토큰 발급 로직

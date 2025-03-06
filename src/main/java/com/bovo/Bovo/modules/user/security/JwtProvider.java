@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -19,8 +20,8 @@ public class JwtProvider {
     public String createAccessToken(Integer userid, String SecretKey, long expireTimeAccess) {
         return Jwts.builder()
                 .claim("userid", userid)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireTimeAccess))
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusMillis(expireTimeAccess)))
                 .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
     }
@@ -29,8 +30,8 @@ public class JwtProvider {
     public String createRefreshToken(Integer userid, String SecretKey, long expireTimeRefresh) {
         return Jwts.builder()
                 .claim("userid", userid)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireTimeRefresh))
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusMillis(expireTimeRefresh)))
                 .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
     }

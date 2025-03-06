@@ -1,6 +1,8 @@
 package com.bovo.Bovo.modules.user.controller;
 
+import com.bovo.Bovo.modules.user.dto.request.EmailDto;
 import com.bovo.Bovo.modules.user.dto.request.LoginDto;
+import com.bovo.Bovo.modules.user.dto.request.NicknameDto;
 import com.bovo.Bovo.modules.user.dto.request.SignupDto;
 import com.bovo.Bovo.modules.user.dto.response.JwtTokenResponseDto;
 import com.bovo.Bovo.modules.user.dto.response.defResponseDto;
@@ -23,20 +25,29 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("/register/nickname")
+    private defResponseDto verifyNickname(@RequestBody NicknameDto nicknameDto) {
+        // nickname이 db에 존재하는지 확인
+        if (userService.existNickname(nicknameDto.getNickname())) {
+            return new defResponseDto(400, "닉네임 중복");
+        }
+
+        return new defResponseDto(201, "사용가능한 닉네임");
+    }
+
+    @PostMapping("/register/email")
+    public defResponseDto verifyEmail(@RequestBody EmailDto emailDto){
+        // email이 db에 존재하는지 확인
+        if (userService.existEmail(emailDto.getEmail())) {
+            return new defResponseDto(400, "이메일 중복");
+        }
+
+        return new defResponseDto(201, "사용가능한 이메일");
+    }
+
+
     @PostMapping("/register")
     public defResponseDto signup(@RequestBody SignupDto signupDto) {
-
-        // email이 db에 존재하는지 확인
-        if (userService.existEmail(signupDto.getEmail())) {
-            return new defResponseDto(400, "이미 가입된 이메일");
-        }
-
-        // nickname이 db에 존재하는지 확인
-        if (userService.existNickname(signupDto.getNickname())) {
-            return new defResponseDto(400, "이미 가입된 닉네임");
-        }
-
-        // 가입되지 않은 email이면 회원가입 진행
         userService.save(signupDto);
         return new defResponseDto(201, "회원가입 성공");
     }

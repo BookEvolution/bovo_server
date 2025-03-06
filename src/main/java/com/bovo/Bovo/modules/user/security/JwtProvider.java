@@ -62,16 +62,24 @@ public class JwtProvider {
 
     // 엑세스 토큰에서 사용자 정보(UserId) 추출
     public Integer ExtractUserIdFromAccessToken(String accessToken, String SecretKey) {
-        JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
-        Jwt jwt = jwtDecoder.decode(accessToken);
-        return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
+        try {
+            JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
+            Jwt jwt = jwtDecoder.decode(accessToken);
+            return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
+        }catch (JwtException e){
+            return 403;
+        }
     }
 
     // 리프레쉬 토큰에서 사용자 정보(UserId) 추출
     public Integer ExtractUserIdFromRefreshToken(String refreshToken, String SecretKey) {
-        JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
-        Jwt jwt = jwtDecoder.decode(refreshToken);
-        return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
+        try {
+            JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
+            Jwt jwt = jwtDecoder.decode(refreshToken);
+            return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
+        } catch (JwtException e) {
+            return 403;
+        }
     }
 
     private JwtDecoder createJwtDecoder(String SecretKey) {

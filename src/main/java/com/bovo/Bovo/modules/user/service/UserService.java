@@ -17,10 +17,13 @@ public interface UserService {
 
     String GenerateAccessToken(Integer userid);
 
-    Cookie GenerateRefreshToken(Integer userid);
+    String GenerateRefreshToken(Integer userid);
 
     Integer verifyRefreshToken(String refreshToken);
 
-    boolean existUserIdAndRefreshToken(Integer userId, String RefreshToken);
+    boolean existUserIdAndRefreshToken(Integer userId, String refreshToken);
 
+    boolean deleteRefreshToken(Integer userId);
+
+    Integer extractUserIdFormRefreshToken(String refreshToken);
 }

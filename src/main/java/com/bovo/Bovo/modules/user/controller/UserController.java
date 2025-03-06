@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,9 +52,16 @@ public class UserController {
 
         // 토큰 발급 로직
         String accessToken = userService.GenerateAccessToken(userService.findUserIdByEmail(loginDto.getEmail()));
-        Cookie refreshToken = userService.GenerateRefreshToken(userService.findUserIdByEmail(loginDto.getEmail()));
+        String refreshToken = userService.GenerateRefreshToken(userService.findUserIdByEmail(loginDto.getEmail()));
 
-        responseCookie.addCookie(refreshToken);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(3600000*24*7)
+                .build();
+        responseCookie.setHeader("Set-Cookie", refreshTokenCookie.toString());
         return new JwtTokenResponseDto(200, "로그인 성공", accessToken);
     }
 
@@ -61,7 +69,7 @@ public class UserController {
     public JwtTokenResponseDto refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse responseCookie) {
         Integer userId = userService.verifyRefreshToken(refreshToken);
 
-        if (refreshToken == null || userId == 403) {
+        if (refreshToken == null || userId == 403 ) {
             return new JwtTokenResponseDto(403, "리프레쉬 토큰 만료, 재로그인 권장", null);
         }
 
@@ -70,21 +78,44 @@ public class UserController {
         }
 
         String NewAccessToken = userService.GenerateAccessToken(userId);
-        Cookie NewRefreshToken = userService.GenerateRefreshToken(userId);
+        String NewRefreshToken = userService.GenerateRefreshToken(userId);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", NewRefreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(3600000*24*7)
+                .build();
+        responseCookie.setHeader("Set-Cookie", refreshTokenCookie.toString());
 
-        responseCookie.addCookie(NewRefreshToken);
         return new JwtTokenResponseDto(200, "엑세스 토큰 재발급 완료", NewAccessToken);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
+    public defResponseDto logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse responseCookie) {
+        if (refreshToken != null) {
+            Integer userId = userService.extractUserIdFormRefreshToken(refreshToken);
+            if (userId != 403) {
+                boolean delete = userService.deleteRefreshToken(userId);
+            }
+        }
 
-        return ResponseEntity.ok("로그아웃 되었습니다");
+        ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0)
+                .build();
+        responseCookie.setHeader("Set-Cookie", expiredCookie.toString());
+
+        return new defResponseDto(200, "로그아웃 성공");
     }
 
     @DeleteMapping("/my-page/delete")
-    public ResponseEntity<String> userdelete() {
-        return ResponseEntity.ok("회원 탈퇴");
+    public defResponseDto userdelete() {
+        // 이메일로 조회해서 삭제하기
+        return new defResponseDto(200, "회원 탈퇴 성공");
     }
 
 

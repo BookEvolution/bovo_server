@@ -87,16 +87,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Cookie GenerateRefreshToken(Integer userid) {
+    public String GenerateRefreshToken(Integer userid) {
         String refreshToken= jwtProvider.createRefreshToken(userid, SecretKey, expireTimeRefresh);
         userAuthRepository.updateRefreshToken(userid, refreshToken); // DB에 리프레쉬 토큰 저장
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(3600000*24*7);
-
-        return refreshTokenCookie;
+        return refreshToken;
     }
 
     @Override
@@ -114,6 +108,18 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean deleteRefreshToken(Integer userId) {
+        userAuthRepository.updateRefreshToken(userId, null);
+        return false;
+    }
+
+    @Override
+    public Integer extractUserIdFormRefreshToken(String refreshToken) {
+        Integer userId = jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
+        return userId;
     }
 
 }

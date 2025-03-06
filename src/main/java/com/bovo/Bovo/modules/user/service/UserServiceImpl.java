@@ -60,12 +60,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         User_Auth usera = new User_Auth(user, signupDto.getEmail(), bCryptPasswordEncoder.encode(signupDto.getPassword()), Provider.LOCAL);
-        userAuthRepository.save(usera);
+        userAuthRepository.saveUserAuth(usera);
     }
 
     @Override
-    public Integer findByEmail(String email) {
-        Users user = userAuthRepository.findByEmail(email)
+    public Integer findUserIdByEmail(String email) {
+        Users user = userAuthRepository.findUserAuthByEmail(email)
                 .get()
                 .getUsers();
         return user.getId();
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean verifyLogin(LoginDto loginDto) {
-        User_Auth userAuth = userAuthRepository.findByEmail(loginDto.getEmail()).get();
+        User_Auth userAuth = userAuthRepository.findUserAuthByEmail(loginDto.getEmail()).get();
         String foundPwd=userAuth.getPassword();
         if (!bCryptPasswordEncoder.matches(loginDto.getPassword(), foundPwd)) {
             return false;
@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Cookie GenerateRefreshToken(Integer userid) {
         String refreshToken= jwtProvider.createRefreshToken(userid, SecretKey, expireTimeRefresh);
+        userAuthRepository.updateRefreshToken(userid, refreshToken); // DB에 리프레쉬 토큰 저장
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true);
@@ -105,6 +106,14 @@ public class UserServiceImpl implements UserService {
         } else {
             return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
         }
+    }
+
+    @Override
+    public boolean existUserIdAndRefreshToken(Integer userId, String refreshToken) {
+        if (!userAuthRepository.verifyUserIdAndRefresh(userId, refreshToken)) {
+            return false;
+        }
+        return true;
     }
 
 }

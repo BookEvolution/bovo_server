@@ -11,7 +11,7 @@ public interface UserService {
 
     void save(SignupDto signupDto);
 
-    Integer findByEmail(String email);
+    Integer findUserIdByEmail(String email);
 
     boolean verifyLogin(LoginDto loginDto);
 
@@ -20,5 +20,7 @@ public interface UserService {
     Cookie GenerateRefreshToken(Integer userid);
 
     Integer verifyRefreshToken(String refreshToken);
+
+    boolean existUserIdAndRefreshToken(Integer userId, String RefreshToken);
 
 }

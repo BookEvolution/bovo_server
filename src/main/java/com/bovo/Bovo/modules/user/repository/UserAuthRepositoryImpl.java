@@ -20,23 +20,50 @@ public class UserAuthRepositoryImpl implements UserAuthRepository{
 
     @Override
     public boolean existEmail(String email) {
-        Long num = em.createQuery("SELECT count(usera) FROM User_Auth usera WHERE usera.email= :email AND usera.provider='LOCAL'", Long.class)
+        Long num = em.createQuery("SELECT count(u) FROM User_Auth u WHERE u.email= :email AND u.provider='LOCAL'", Long.class)
                 .setParameter("email", email)
                 .getSingleResult();
         return num>0; // db에 email이 존재하면 1, 존재하지 않으면 0
     }
 
     @Override
-    public User_Auth save(User_Auth usera) {
+    public User_Auth saveUserAuth(User_Auth usera) {
         em.persist(usera);
         return usera;
     }
 
     @Override
-    public Optional<User_Auth> findByEmail(String email) { // JPQL을 이용한 email에 해당하는 user 조회
+    public Optional<User_Auth> findUserAuthByEmail(String email) { // JPQL을 이용한 email에 해당하는 user 조회
         User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.email= :email", User_Auth.class)
                 .setParameter("email", email)
                 .getSingleResult(); // 카카오 로그인 추가 시 수정 필요
         return Optional.ofNullable(usera);
+    }
+
+    @Override
+    public boolean verifyUserIdAndRefresh(Integer userId, String refreshToken) {
+        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.user.id= :userId", User_Auth.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        boolean verify = usera.getRefresh_token().equals(refreshToken);
+        if (!verify) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void updateRefreshToken(Integer userId, String refreshToken) {
+        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.user.id= :userId", User_Auth.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        if (usera != null) {
+            usera.setRefresh_token(refreshToken);
+        }
+    }
+
+    @Override
+    public boolean deleteRefreshToken(Integer userId) {
+        return false;
     }
 }

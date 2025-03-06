@@ -2,7 +2,6 @@ package com.bovo.Bovo.modules.user.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -11,6 +10,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -20,8 +20,8 @@ public class JwtProvider {
     public String createAccessToken(Integer userid, String SecretKey, long expireTimeAccess) {
         return Jwts.builder()
                 .claim("userid", userid)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireTimeAccess))
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusMillis(expireTimeAccess)))
                 .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
     }
@@ -30,8 +30,8 @@ public class JwtProvider {
     public String createRefreshToken(Integer userid, String SecretKey, long expireTimeRefresh) {
         return Jwts.builder()
                 .claim("userid", userid)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireTimeRefresh))
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusMillis(expireTimeRefresh)))
                 .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
     }
@@ -58,6 +58,13 @@ public class JwtProvider {
         } catch (JwtException e) {
             return 403;
         }
+    }
+
+    // 엑세스 토큰에서 사용자 정보(UserId) 추출
+    public Integer ExtractUserIdFromAccessToken(String accessToken, String SecretKey) {
+        JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
+        Jwt jwt = jwtDecoder.decode(accessToken);
+        return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
     }
 
     // 리프레쉬 토큰에서 사용자 정보(UserId) 추출

@@ -61,9 +61,4 @@ public class UserAuthRepositoryImpl implements UserAuthRepository{
             usera.setRefresh_token(refreshToken);
         }
     }
-
-    @Override
-    public boolean deleteRefreshToken(Integer userId) {
-        return false;
-    }
 }

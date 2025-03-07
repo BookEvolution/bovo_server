@@ -1,9 +1,7 @@
 package com.bovo.Bovo.modules.user.controller;
 
-import com.bovo.Bovo.modules.user.dto.request.EmailDto;
-import com.bovo.Bovo.modules.user.dto.request.LoginDto;
-import com.bovo.Bovo.modules.user.dto.request.NicknameDto;
-import com.bovo.Bovo.modules.user.dto.request.SignupDto;
+import com.bovo.Bovo.modules.user.dto.request.*;
+import com.bovo.Bovo.modules.user.dto.response.DeleteUserDto;
 import com.bovo.Bovo.modules.user.dto.response.JwtTokenResponseDto;
 import com.bovo.Bovo.modules.user.dto.response.defResponseDto;
 import com.bovo.Bovo.modules.user.service.UserService;
@@ -15,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,6 +24,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+    private void expiredCookie(HttpServletResponse responseCookie) {
+        ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("LAX")
+                .path("/")
+                .maxAge(0)
+                .build();
+        responseCookie.setHeader("Set-Cookie", expiredCookie.toString());
+    }
 
     @PostMapping("/register/nickname")
     private ResponseEntity<defResponseDto> verifyNickname(@RequestBody NicknameDto nicknameDto) {
@@ -53,13 +63,26 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<defResponseDto> signup(@RequestBody SignupDto signupDto) {
+        // nickname이 db에 존재하는지 확인
+        if (userService.existNickname(signupDto.getNickname())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new defResponseDto(400, "닉네임 중복"));
+        }
+
+        // email이 db에 존재하는지 확인
+        if (userService.existEmail(signupDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new defResponseDto(400, "이메일 중복"));
+        }
+
         userService.save(signupDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new defResponseDto(201, "회원가입 성공"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtTokenResponseDto> login(@RequestBody LoginDto loginDto, HttpServletResponse responseCookie) {
+    public ResponseEntity<JwtTokenResponseDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+        System.out.println("로그인 실행");
         if (!userService.existEmail(loginDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new JwtTokenResponseDto(404, "존재하지 않은 사용자 이메일", null));
@@ -79,7 +102,7 @@ public class UserController {
                 .path("/")
                 .maxAge(3600000 * 24 * 7)
                 .build();
-        responseCookie.setHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new JwtTokenResponseDto(200, "로그인 성공", accessToken));
@@ -87,15 +110,17 @@ public class UserController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtTokenResponseDto> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse responseCookie) {
+    public ResponseEntity<JwtTokenResponseDto> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         Integer userId = userService.verifyRefreshToken(refreshToken);
 
-        if (refreshToken == null || userId == 403 ) {
+        if (refreshToken == null || userId == null ) {
+            expiredCookie(response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new JwtTokenResponseDto(403, "리프레쉬 토큰 만료, 재로그인 권장", null));
         }
 
         if (!userService.existUserIdAndRefreshToken(userId, refreshToken)) {
+            expiredCookie(response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new JwtTokenResponseDto(403, "잘못된 리프레쉬 토큰, 재로그인 권장", null));
         }
@@ -109,40 +134,41 @@ public class UserController {
                 .path("/")
                 .maxAge(3600000*24*7)
                 .build();
-        responseCookie.setHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new JwtTokenResponseDto(200, "엑세스 토큰 재발급 완료", NewAccessToken));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse responseCookie) {
+    /*@PostMapping("/my-page/logout")
+    public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+        System.out.println("로그아웃 실행"+refreshToken);
+
+        SecurityContextHolder.clearContext();
+
         if (refreshToken != null) {
-            Integer userId = userService.extractUserIdFormRefreshToken(refreshToken);
-            if (userId != 403) {
+            Integer userId = userService.extractUserIdFromRefreshToken(refreshToken);
+            if (userId != null) {
                 boolean delete = userService.deleteRefreshToken(userId);
             }
         }
 
-        ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(0)
-                .build();
-        responseCookie.setHeader("Set-Cookie", expiredCookie.toString());
-
+        expiredCookie(response);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new defResponseDto(200, "로그아웃 성공"));
     }
 
-    @DeleteMapping("/my-page/delete")
-    public ResponseEntity<defResponseDto> userdelete() {
+    @DeleteMapping("/my-page/profile/delete")
+    public ResponseEntity<DeleteUserDto> userdelete(@RequestBody EmailDto emailDto) {
         // 이메일로 조회해서 삭제하기
+        if (!userService.existEmail(emailDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new DeleteUserDto(404, "존재하지 않은 사용자 이메일",null));
+        }
+
+        Integer deleteUserId = userService.deleteUserByEmail(emailDto.getEmail());
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new defResponseDto(200, "회원 탈퇴 성공"));
-    }
-
-
+                .body(new DeleteUserDto(200, "회원 탈퇴 성공", deleteUserId));
+    }*/
 }

@@ -6,5 +6,6 @@ public interface UserRepository {
     Users save(Users user); // 회원가입: user를 DB에 저장
 
     boolean existNickname(String nickname);
-    // 추가: user 삭제
+
+    Users deleteUser(Users user);// user 삭제
 }

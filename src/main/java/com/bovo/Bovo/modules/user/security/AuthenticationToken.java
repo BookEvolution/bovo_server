@@ -9,6 +9,7 @@ public class AuthenticationToken extends AbstractAuthenticationToken {
     public AuthenticationToken(AuthenticatedUserId authenticatedUserId) {
         super(null);
         this.authenticatedUserId = authenticatedUserId;
+        setAuthenticated(true);
     }
 
     @Override

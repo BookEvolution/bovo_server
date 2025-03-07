@@ -26,4 +26,6 @@ public interface UserService {
     boolean deleteRefreshToken(Integer userId);
 
     Integer extractUserIdFromRefreshToken(String refreshToken);
+
+    Integer deleteUserByEmail(String email);
 }

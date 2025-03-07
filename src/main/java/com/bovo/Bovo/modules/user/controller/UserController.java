@@ -1,9 +1,7 @@
 package com.bovo.Bovo.modules.user.controller;
 
-import com.bovo.Bovo.modules.user.dto.request.EmailDto;
-import com.bovo.Bovo.modules.user.dto.request.LoginDto;
-import com.bovo.Bovo.modules.user.dto.request.NicknameDto;
-import com.bovo.Bovo.modules.user.dto.request.SignupDto;
+import com.bovo.Bovo.modules.user.dto.request.*;
+import com.bovo.Bovo.modules.user.dto.response.DeleteUserDto;
 import com.bovo.Bovo.modules.user.dto.response.JwtTokenResponseDto;
 import com.bovo.Bovo.modules.user.dto.response.defResponseDto;
 import com.bovo.Bovo.modules.user.service.UserService;
@@ -142,7 +140,7 @@ public class UserController {
                 .body(new JwtTokenResponseDto(200, "엑세스 토큰 재발급 완료", NewAccessToken));
     }
 
-    @PostMapping("/my-page/logout")
+    /*@PostMapping("/my-page/logout")
     public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         System.out.println("로그아웃 실행"+refreshToken);
 
@@ -160,12 +158,17 @@ public class UserController {
                 .body(new defResponseDto(200, "로그아웃 성공"));
     }
 
-    @DeleteMapping("/my-page/delete")
-    public ResponseEntity<defResponseDto> userdelete() {
+    @DeleteMapping("/my-page/profile/delete")
+    public ResponseEntity<DeleteUserDto> userdelete(@RequestBody EmailDto emailDto) {
         // 이메일로 조회해서 삭제하기
+        if (!userService.existEmail(emailDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new DeleteUserDto(404, "존재하지 않은 사용자 이메일",null));
+        }
+
+        Integer deleteUserId = userService.deleteUserByEmail(emailDto.getEmail());
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new defResponseDto(200, "회원 탈퇴 성공"));
-    }
-
-
+                .body(new DeleteUserDto(200, "회원 탈퇴 성공", deleteUserId));
+    }*/
 }

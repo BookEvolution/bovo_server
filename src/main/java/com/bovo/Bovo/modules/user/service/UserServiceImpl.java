@@ -10,6 +10,7 @@ import com.bovo.Bovo.modules.user.repository.UserRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,6 +120,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer extractUserIdFromRefreshToken(String refreshToken) {
         return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
+    }
+
+    @Override
+    public Integer deleteUserByEmail(String email) {
+        Users user = userAuthRepository.findUserAuthByEmail(email)
+                .get()
+                .getUsers();
+        Integer deleteUserId = userRepository.deleteUser(user).getId();
+
+        return deleteUserId;
     }
 
 }

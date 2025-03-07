@@ -30,4 +30,10 @@ public class UserRepositoryImpl implements UserRepository {
                 .getSingleResult();
         return num>0; // db에 nickname이 존재하면 1, 존재하지 않으면 0
     }
+
+    @Override
+    public Users deleteUser(Users user) {
+        em.remove(user);
+        return user;
+    }
 }

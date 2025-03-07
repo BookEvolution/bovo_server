@@ -67,7 +67,7 @@ public class JwtProvider {
             Jwt jwt = jwtDecoder.decode(accessToken);
 
             Object userIdObj = jwt.getClaim("userid"); // "userId" 클레임에서 값 추출 -> Long/ Integer 구분 불가
-            System.out.println("🔍 Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
+            System.out.println("Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
 
             if (userIdObj instanceof Number) {
                 return ((Number) userIdObj).intValue(); // Integer 타입으로 리턴

@@ -51,16 +51,22 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        System.out.println(requestURI + ": 엑세스 토큰 존재");
 
         String accessToken = authorization.split(" ")[1];
         int result = jwtProvider.ExpiredAccessToken(accessToken, SecretKey);
-        if (result == 201) {
+        if (result == 200) {
+            System.out.println(requestURI + ": SecurityContextHolder 저장 시작");
+
             Integer userId = jwtProvider.ExtractUserIdFromAccessToken(accessToken, SecretKey); // 토큰에서 userId 추출
             AuthenticatedUserId ExtractedUserId = new AuthenticatedUserId(userId); // 추출한 userId를 DTO에 저장
             // AbstractAuthenticationToken을 상속한 CustomAuthenticationToken로 userPrincipal을 매개변수로 전달하여 인증 객체 생성
             AuthenticationToken authenticationToken = new AuthenticationToken(ExtractedUserId);
+            authenticationToken.setAuthenticated(true);
             // SecurityContextHolder에 저장
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            System.out.println(requestURI + ": 검증 완료");
 
             filterChain.doFilter(request,response);
             return;

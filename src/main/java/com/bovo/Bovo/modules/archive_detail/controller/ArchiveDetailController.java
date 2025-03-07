@@ -77,14 +77,19 @@ public class ArchiveDetailController {
 
     // 기록 수정
     @PutMapping("/{book_id}/memo")
-    public MemoUpdateResponseDto updateMemo(@PathVariable("book_id") Integer bookId, @RequestParam("memoId") Long memoId, @RequestBody MemoUpdateRequestDto requestDto) {
-        return new MemoUpdateResponseDto();
+    public MemoUpdateResponseDto updateMemo(@PathVariable("book_id") Integer bookId, @RequestParam("memoId") Integer memoId, @RequestBody MemoUpdateRequestDto requestDto) {
+        int userId = 1;
+        readingNotesService.updateMemo(memoId,bookId,userId,requestDto);
+
+        return new MemoUpdateResponseDto("수정 완료");
     }
 
     // 기록 삭제
     @DeleteMapping("/{book_id}/memo")
     public MemoDeleteResponseDto deleteMemo(@PathVariable("book_id") Integer bookId, @RequestParam("memoId") Integer memoId) {
-        readingNotesService.deleteMemo(memoId, bookId);
+        int userId = 1;
+        readingNotesService.deleteMemo(memoId, bookId, userId);
+
         return new MemoDeleteResponseDto("메모 삭제 완료");
     }
 
@@ -99,7 +104,7 @@ public class ArchiveDetailController {
 
     // 기록 순서 변경
     @PutMapping("/{book_id}/memos")
-    public MemoReorderResponseDto reorderMemos(@PathVariable("book_id") Long bookId) {
+    public MemoReorderResponseDto reorderMemos(@PathVariable("book_id") Integer bookId) {
         return new MemoReorderResponseDto();
     }
 }

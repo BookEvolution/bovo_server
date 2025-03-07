@@ -14,6 +14,4 @@ public interface UserAuthRepository {
     boolean verifyUserIdAndRefresh(Integer userId, String refreshToken); // userid로 user 조회
 
     void updateRefreshToken(Integer userId, String refreshToken);
-
-    boolean deleteRefreshToken(Integer userId);
 }

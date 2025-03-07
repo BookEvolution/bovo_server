@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer verifyRefreshToken(String refreshToken) {
-        if (jwtProvider.ExpiredRefreshToken(refreshToken, SecretKey)==403) {
-            return 403;
+        if (jwtProvider.ExpiredRefreshToken(refreshToken, SecretKey)) {
+            return null;
         } else {
             return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
         }
@@ -117,9 +117,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer extractUserIdFormRefreshToken(String refreshToken) {
-        Integer userId = jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
-        return userId;
+    public Integer extractUserIdFromRefreshToken(String refreshToken) {
+        return jwtProvider.ExtractUserIdFromRefreshToken(refreshToken, SecretKey);
     }
 
 }

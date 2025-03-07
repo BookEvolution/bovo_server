@@ -50,13 +50,13 @@ public class JwtProvider {
     }
 
     // 리프레쉬 토큰 검증 로직 -> 이것까지 만료되면 로그아웃 후 로그인 페이지로 이동 권장
-    public int ExpiredRefreshToken(String refreshToken, String SecretKey){
+    public boolean ExpiredRefreshToken(String refreshToken, String SecretKey){
         try {
             JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
             Jwt jwt = jwtDecoder.decode(refreshToken);
-            return 200;
+            return false;
         } catch (JwtException e) {
-            return 403;
+            return true;
         }
     }
 
@@ -65,20 +65,35 @@ public class JwtProvider {
         try {
             JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
             Jwt jwt = jwtDecoder.decode(accessToken);
-            return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
+
+            Object userIdObj = jwt.getClaim("userid"); // "userId" 클레임에서 값 추출 -> Long/ Integer 구분 불가
+            System.out.println("🔍 Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
+
+            if (userIdObj instanceof Number) {
+                return ((Number) userIdObj).intValue(); // Integer 타입으로 리턴
+            }
+            return null;
         }catch (JwtException e){
-            return 403;
+            return null;
         }
     }
 
     // 리프레쉬 토큰에서 사용자 정보(UserId) 추출
     public Integer ExtractUserIdFromRefreshToken(String refreshToken, String SecretKey) {
         try {
+
             JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
             Jwt jwt = jwtDecoder.decode(refreshToken);
-            return jwt.getClaim("userid"); // "userId" 클레임에서 값 추출
+
+            Object userIdObj = jwt.getClaim("userid"); // "userId" 클레임에서 값 추출 -> Long/ Integer 구분 불가
+            System.out.println("🔍 Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
+
+            if (userIdObj instanceof Number) {
+                return ((Number) userIdObj).intValue(); // Integer 타입으로 리턴
+            }
+            return null;
         } catch (JwtException e) {
-            return 403;
+            return null;
         }
     }
 

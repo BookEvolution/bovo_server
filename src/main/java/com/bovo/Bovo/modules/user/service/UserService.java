@@ -25,5 +25,5 @@ public interface UserService {
 
     boolean deleteRefreshToken(Integer userId);
 
-    Integer extractUserIdFormRefreshToken(String refreshToken);
+    Integer extractUserIdFromRefreshToken(String refreshToken);
 }

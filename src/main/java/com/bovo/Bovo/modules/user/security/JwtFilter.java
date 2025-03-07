@@ -33,11 +33,15 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String requestURI = request.getRequestURI();
+        System.out.println("현재 요청: "+ requestURI);
 
         if (requestURI.equals("/") || requestURI.equals("/refresh") || requestURI.contains("/login") || requestURI.contains("/register") || requestURI.contains("/logout")) {
+            System.out.println("필터 적용 안함: "+ requestURI);
             filterChain.doFilter(request, response);
             return;
         }
+
+        System.out.println("필터 적용: "+ requestURI);
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         logger.info("authorization: "+ authorization);
@@ -55,18 +59,17 @@ public class JwtFilter extends OncePerRequestFilter {
             AuthenticatedUserId ExtractedUserId = new AuthenticatedUserId(userId); // 추출한 userId를 DTO에 저장
             // AbstractAuthenticationToken을 상속한 CustomAuthenticationToken로 userPrincipal을 매개변수로 전달하여 인증 객체 생성
             AuthenticationToken authenticationToken = new AuthenticationToken(ExtractedUserId);
-
             // SecurityContextHolder에 저장
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             filterChain.doFilter(request,response);
             return;
         } else if (result == 401) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            String jsonResponse = "{\"status\": \"401\", \"message\": \"엑세스 토큰 만료\"}";
+            String jsonResponse = "{\"status\": \"403\", \"message\": \"엑세스 토큰 만료\"}";
             response.getWriter().write(jsonResponse);
 
             return; // 엑세스 토큰 만료 -> 리프레쉬 토큰

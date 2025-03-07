@@ -26,6 +26,17 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    private void expiredCookie(HttpServletResponse responseCookie) {
+        ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0)
+                .build();
+        responseCookie.setHeader("Set-Cookie", expiredCookie.toString());
+    }
+
     @PostMapping("/register/nickname")
     private ResponseEntity<defResponseDto> verifyNickname(@RequestBody NicknameDto nicknameDto) {
         // nickname이 db에 존재하는지 확인
@@ -59,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtTokenResponseDto> login(@RequestBody LoginDto loginDto, HttpServletResponse responseCookie) {
+    public ResponseEntity<JwtTokenResponseDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         if (!userService.existEmail(loginDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new JwtTokenResponseDto(404, "존재하지 않은 사용자 이메일", null));
@@ -79,7 +90,7 @@ public class UserController {
                 .path("/")
                 .maxAge(3600000 * 24 * 7)
                 .build();
-        responseCookie.setHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new JwtTokenResponseDto(200, "로그인 성공", accessToken));
@@ -87,15 +98,17 @@ public class UserController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtTokenResponseDto> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse responseCookie) {
+    public ResponseEntity<JwtTokenResponseDto> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         Integer userId = userService.verifyRefreshToken(refreshToken);
 
         if (refreshToken == null || userId == 403 ) {
+            expiredCookie(response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new JwtTokenResponseDto(403, "리프레쉬 토큰 만료, 재로그인 권장", null));
         }
 
         if (!userService.existUserIdAndRefreshToken(userId, refreshToken)) {
+            expiredCookie(response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new JwtTokenResponseDto(403, "잘못된 리프레쉬 토큰, 재로그인 권장", null));
         }
@@ -109,14 +122,14 @@ public class UserController {
                 .path("/")
                 .maxAge(3600000*24*7)
                 .build();
-        responseCookie.setHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new JwtTokenResponseDto(200, "엑세스 토큰 재발급 완료", NewAccessToken));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse responseCookie) {
+    public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         if (refreshToken != null) {
             Integer userId = userService.extractUserIdFormRefreshToken(refreshToken);
             if (userId != 403) {
@@ -124,15 +137,7 @@ public class UserController {
             }
         }
 
-        ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(0)
-                .build();
-        responseCookie.setHeader("Set-Cookie", expiredCookie.toString());
-
+        expiredCookie(response);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new defResponseDto(200, "로그아웃 성공"));
     }

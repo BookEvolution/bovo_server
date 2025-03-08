@@ -1,5 +1,7 @@
 package com.bovo.Bovo.modules.my_page.repository;
 
+import com.bovo.Bovo.common.User_Auth;
+import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.my_page.dto.response.partial.PartialProfileDto;
 import com.bovo.Bovo.modules.my_page.dto.response.partial.PartialProfileDetailDto;
 import com.bovo.Bovo.modules.my_page.dto.response.partial.PartialProfileUpdateDto;
@@ -55,5 +57,35 @@ public class MyPageRepositoryImpl implements MyPageRepository {
         return em.createQuery("SELECT new com.bovo.Bovo.modules.my_page.dto.response.partial.PartialProfileUpdateDto(u.profile_picture, u.nickname) FROM users u WHERE u.id = :userId", PartialProfileUpdateDto.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
+    }
+
+    @Override
+    public boolean newProfilePictureUpdate(String profile_picture, Integer userId) {
+        Users users = em.find(Users.class, userId);
+        if (users != null) {
+            users.setProfile_picture(profile_picture);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean newNicknameUpdate(String nickname, Integer userId) {
+        Users users = em.find(Users.class, userId);
+        if (users != null) {
+            users.setNickname(nickname);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean newPassword(String password, Integer userId) {
+        User_Auth usera = em.find(User_Auth.class, userId);
+        if (usera != null) {
+            usera.setPassword(password);
+            return true;
+        }
+        return false;
     }
 }

@@ -14,4 +14,10 @@ public interface MyPageRepository {
     PartialProfileDetailDto findPartialProfileDetailByUserId(Integer userId);
 
     PartialProfileUpdateDto findPartialProfileUpdateByUserId(Integer userId);
+
+    boolean newProfilePictureUpdate(String profile_picture, Integer userId);
+
+    boolean newNicknameUpdate(String nickname, Integer userId);
+
+    boolean newPassword(String password,Integer userId);
 }

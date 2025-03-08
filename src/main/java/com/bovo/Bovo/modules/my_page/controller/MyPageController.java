@@ -113,6 +113,13 @@ public class MyPageController {
     @PutMapping("/profile/update")
     public ResponseEntity<defResponseDto> updateProfileUpdateForm(@RequestBody NewProfileUpdateDto newProfileUpdateDto, @AuthenticationPrincipal AuthenticatedUserId user) {
         Integer userId = user.getUserId();
+        if (!myPageService.newProfileUpdate(
+                newProfileUpdateDto.getProfile_picture(),
+                newProfileUpdateDto.getNickname(),
+                newProfileUpdateDto.getPassword(), userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new defResponseDto(403, "프로필 수정 오류"));
+        }
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new defResponseDto(200, "프로필 수정 완료"));

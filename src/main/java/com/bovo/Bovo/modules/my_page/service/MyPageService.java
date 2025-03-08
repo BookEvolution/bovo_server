@@ -14,4 +14,6 @@ public interface MyPageService {
     PartialProfileDetailDto findPartialProfileDetailByUserId(Integer userId);
 
     PartialProfileUpdateDto findPartialProfileUpdateByUserId(Integer userId);
+
+    boolean newProfileUpdate(String profile_picture, String nickname, String password, Integer userId);
 }

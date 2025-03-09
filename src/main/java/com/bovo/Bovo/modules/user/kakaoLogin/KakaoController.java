@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.controller;
+package com.bovo.Bovo.modules.user.kakaoLogin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

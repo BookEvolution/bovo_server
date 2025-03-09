@@ -31,6 +31,10 @@ public class User_Auth {
     @Column(nullable = true)
     private String social_id=null;
 
+    // 카카오 로그인 사용자만 가지는 카카오 엑세스 토큰
+    @Column(nullable = true)
+    private String kakao_access_token = null;
+
     // 최초 로그인으로 발급 전에는 null
     @Column(nullable = true)
     private String refresh_token = null;

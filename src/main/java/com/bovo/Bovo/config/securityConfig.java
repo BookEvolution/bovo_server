@@ -60,9 +60,9 @@ public class securityConfig {
     public CorsConfigurationSource corsConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://localhost:5173"); // 프론트 주소
-//        corsConfiguration.addAllowedOrigin("https://*.ngrok-free.app");
-        corsConfiguration.addAllowedMethod("*"); //모든 HTTP 메서드 허용
-        corsConfiguration.addAllowedHeader("*"); // 모든 헤더 허용
+//        corsConfiguration.addAllowedOrigin("https://5bc7-112-158-33-80.ngrok-free.app");
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
+        corsConfiguration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
         corsConfiguration.setAllowCredentials(true); // 쿠키 허용
         corsConfiguration.addExposedHeader("Set-Cookie");
         corsConfiguration.setAllowCredentials(true); // JWT 토큰을 쿠키에 넣어서 전달하므로

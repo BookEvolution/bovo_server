@@ -35,6 +35,12 @@ public class JwtFilter extends OncePerRequestFilter {
         final String requestURI = request.getRequestURI();
         System.out.println("현재 요청: "+ requestURI);
 
+        if (request.getMethod().equals("GET") && !requestURI.startsWith("/my-page")) {
+            System.out.println("GET 요청 - JwtFilter 적용 안함: " + requestURI);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (requestURI.equals("/") || requestURI.equals("/refresh") || requestURI.contains("/login") || requestURI.contains("/register") || requestURI.contains("/logout")) {
             System.out.println("필터 적용 안함: "+ requestURI);
             filterChain.doFilter(request, response);

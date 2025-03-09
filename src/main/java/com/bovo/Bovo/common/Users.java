@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 불필요한 객체 생성 방지
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "users")
 public class Users {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,31 +40,30 @@ public class Users {
     private List<MissionComplete> missionComplete = new ArrayList<>();
 
     // 카카오 로그인 추가 시 null 허용으로 변경 예정
-    @Column(nullable = false)
+    @Column
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String nickname;
 
-    @Column(nullable = false)
+    @Column
     private String profile_picture; // 상대 경로
 
     @Column(nullable = false)
-    private int level;
+    private int level = 1;
 
     @Column(nullable = false)
-    private int exp;
+    private int exp = 0;
 
     @Column(nullable = false)
     private LocalDateTime join_date;
 
-    @Builder
-    public Users(String profile_picture, String nickname, String email) {
-        this.profile_picture = profile_picture;
-        this.nickname = nickname;
-        this.email = email;
-        this.level = 1;
-        this.exp = 0;
-        this.join_date = LocalDateTime.now();
+    public static Users createUser(String profile_picture, String nickname, String email) {
+        return Users.builder()
+                .profile_picture(profile_picture)
+                .nickname(nickname)
+                .email(email)
+                .join_date(LocalDateTime.now())
+                .build();
     }
 }

@@ -57,10 +57,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(SignupDto signupDto) {
-        Users user = new Users(signupDto.getProfile_picture(), signupDto.getNickname(), signupDto.getEmail());
+        Users user = Users.createUser(signupDto.getProfile_picture(), signupDto.getNickname(), signupDto.getEmail());
         userRepository.save(user);
 
-        User_Auth usera = new User_Auth(user, signupDto.getEmail(), bCryptPasswordEncoder.encode(signupDto.getPassword()), Provider.LOCAL);
+        User_Auth usera = User_Auth.createLocalUser(user, signupDto.getEmail(), bCryptPasswordEncoder.encode(signupDto.getPassword()));
         userAuthRepository.saveUserAuth(usera);
     }
 

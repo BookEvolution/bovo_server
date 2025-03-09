@@ -45,7 +45,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository{
         User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.user.id= :userId", User_Auth.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
-        boolean verify = usera.getRefresh_token().equals(refreshToken);
+        boolean verify = usera.getRefreshToken().equals(refreshToken);
         if (!verify) {
             return false;
         }
@@ -58,7 +58,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository{
                 .setParameter("userId", userId)
                 .getSingleResult();
         if (usera != null) {
-            usera.setRefresh_token(refreshToken);
+            usera.setRefreshToken(refreshToken);
         }
     }
 }

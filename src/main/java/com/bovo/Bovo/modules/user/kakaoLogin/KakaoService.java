@@ -2,10 +2,7 @@ package com.bovo.Bovo.modules.user.kakaoLogin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -56,6 +53,18 @@ public class KakaoService {
     }
 
     public Long getUserIdFromKakao(String KakaoAccessToken) {
+        String tokenInfoUrl = "https://kapi.kakao.com/v1/user/access_token_info";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + KakaoAccessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(tokenInfoUrl, HttpMethod.GET, request, String.class);
+
+        try {
+            return new ObjectMapper().readTree(response.getBody()).get("id").asLong();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("카카오 토큰 정보 조회 오류", e);
+        }
     }
 }

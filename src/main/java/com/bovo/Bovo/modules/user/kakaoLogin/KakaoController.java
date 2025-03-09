@@ -15,6 +15,7 @@ public class KakaoController {
 
     @PostMapping("/bovocallback")
     public String getAuthorizationCode(@RequestBody AuthorizationCodeDto authorizationCodeDto) {
+        String kakaoAccessToken = kakaoService.getKakaoAccessToken(authorizationCodeDto.getAuthorizationCode());
 
     }
 }

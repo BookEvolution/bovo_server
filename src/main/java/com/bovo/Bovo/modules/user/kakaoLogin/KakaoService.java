@@ -54,4 +54,8 @@ public class KakaoService {
 //                "scope":"account_email profile"
 //        }
     }
+
+    public Long getUserIdFromKakao(String KakaoAccessToken) {
+
+    }
 }

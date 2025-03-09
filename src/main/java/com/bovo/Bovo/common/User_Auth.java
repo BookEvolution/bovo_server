@@ -29,7 +29,7 @@ public class User_Auth {
 
     // 카카오 로그인 사용자만 가짐
     @Column(nullable = true)
-    private String social_id=null;
+    private Long social_id = null; // String -> Long 변경
 
     // 카카오 로그인 사용자만 가지는 카카오 엑세스 토큰
     @Column(nullable = true)

@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.sevcie;
+package com.bovo.Bovo.modules.user.kakaoLogin.service;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;

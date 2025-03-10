@@ -70,6 +70,8 @@ public class JwtFilter extends OncePerRequestFilter {
             Integer userId = jwtProvider.ExtractUserIdFromAccessToken(accessToken, SecretKey); // 토큰에서 userId 추출
             AuthenticatedUserId ExtractedUserId = new AuthenticatedUserId(userId); // 추출한 userId를 DTO에 저장
 
+            // ***
+
             // AbstractAuthenticationToken을 상속한 CustomAuthenticationToken로 userPrincipal을 매개변수로 전달하여 인증 객체 생성
             AuthenticationToken authenticationToken = new AuthenticationToken(ExtractedUserId);
             authenticationToken.setAuthenticated(true);

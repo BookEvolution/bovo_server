@@ -28,6 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
     public JwtFilter(@Value("${jwt.secretkey}") String secretKey, JwtProvider jwtProvider) {
         this.SecretKey = secretKey;
         this.jwtProvider = jwtProvider;
+        System.out.println("JwtFilter 생성됨!");
     }
 
     @Override
@@ -35,9 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String requestURI = request.getRequestURI();
         System.out.println("현재 요청: "+ requestURI);
 
-        if (request.getMethod().equals("GET") && requestURI.startsWith("/my-page")) {
-            System.out.println("GET /my-page 요청 - JwtFilter 적용: " + requestURI);
-        } else if (request.getMethod().equals("GET")) {
+        if (request.getMethod().equals("GET") && !requestURI.contains("/my-page")) {
             System.out.println("GET 요청 - JwtFilter 적용 안함: " + requestURI);
             filterChain.doFilter(request, response);
             return;
@@ -53,6 +52,8 @@ public class JwtFilter extends OncePerRequestFilter {
         System.out.println("필터 적용: "+ requestURI);
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        System.out.println("서버가 받은 Authorization 헤더: " + request.getHeader(HttpHeaders.AUTHORIZATION));
+
         logger.info("authorization: "+ authorization);
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -68,6 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
             System.out.println(requestURI + ": SecurityContextHolder 저장 시작");
 
             Integer userId = jwtProvider.ExtractUserIdFromAccessToken(accessToken, SecretKey); // 토큰에서 userId 추출
+            System.out.println("JWT에서 추출된 userId: " + userId);
             AuthenticatedUserId ExtractedUserId = new AuthenticatedUserId(userId); // 추출한 userId를 DTO에 저장
 
             // ***
@@ -97,6 +99,9 @@ public class JwtFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
+
+            String errorMessage = "재로그인 권장 (JWT 검증 실패)";
+            System.out.println("403 오류: " + errorMessage);
 
             String jsonResponse = "{\"status\": \"403\", \"message\": \"재로그인 권장\"}";
             response.getWriter().write(jsonResponse);

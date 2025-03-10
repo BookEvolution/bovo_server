@@ -84,12 +84,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String GenerateAccessToken(Integer userid) {
-        return jwtProvider.createAccessToken(userid, SecretKey, expireTimeAccess);
+        System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
+        String accessToken = jwtProvider.createAccessToken(userid, SecretKey, expireTimeAccess);
+        System.out.println("accessToken: "+ accessToken);
+        return accessToken;
     }
 
     @Override
     public String GenerateRefreshToken(Integer userid) {
+        System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
         String refreshToken= jwtProvider.createRefreshToken(userid, SecretKey, expireTimeRefresh);
+        System.out.println("refreshToken: " + refreshToken);
         userAuthRepository.updateRefreshToken(userid, refreshToken); // DB에 리프레쉬 토큰 저장
         return refreshToken;
     }

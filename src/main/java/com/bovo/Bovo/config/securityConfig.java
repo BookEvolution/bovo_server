@@ -24,7 +24,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity // Spring Security의 보안 설정을 활성화하는 역할
 public class securityConfig {
-    private JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
 
     public securityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
@@ -38,10 +38,10 @@ public class securityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(corsConfig()))
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 기능 비활성화
                 .formLogin(AbstractHttpConfigurer::disable) // 기본 로그인 페이지 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
-                .cors(cors -> cors.configurationSource(corsConfig()))
                 .authorizeHttpRequests(auth -> { // 요청(URL)에 대한 접근 제어 설정
 //                    auth.requestMatchers("/**", "/error", "/static/**").permitAll(); // 개발 중 임시 인증 없이 허용
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Preflight 요청 허용
@@ -59,13 +59,11 @@ public class securityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfig() {
-        String ngrokUrl = System.getenv("NGROK_URL");
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:5173"); // 프론트 주소
-        corsConfiguration.addAllowedOrigin(ngrokUrl);
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://b5db-112-158-33-80.ngrok-free.app"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
         corsConfiguration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
-        corsConfiguration.setAllowCredentials(true); // 쿠키 허용
+        corsConfiguration.addExposedHeader("Authorization");
         corsConfiguration.addExposedHeader("Set-Cookie");
         corsConfiguration.setAllowCredentials(true); // JWT 토큰을 쿠키에 넣어서 전달하므로
 

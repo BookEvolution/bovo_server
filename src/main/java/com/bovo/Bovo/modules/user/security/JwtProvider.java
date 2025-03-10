@@ -18,6 +18,8 @@ public class JwtProvider {
 
     // 엑세스 토큰 발급
     public String createAccessToken(Integer userid, String SecretKey, long expireTimeAccess) {
+        System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
+
         return Jwts.builder()
                 .claim("userid", userid)
                 .setIssuedAt(Date.from(Instant.now()))
@@ -28,6 +30,8 @@ public class JwtProvider {
 
     // 리프레쉬 토큰 발급
     public String createRefreshToken(Integer userid, String SecretKey, long expireTimeRefresh) {
+        System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
+
         return Jwts.builder()
                 .claim("userid", userid)
                 .setIssuedAt(Date.from(Instant.now()))
@@ -39,12 +43,19 @@ public class JwtProvider {
     // 엑세스 토큰 검증 로직
     public int ExpiredAccessToken(String accessToken, String SecretKey){
         try {
+            System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
+
             JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
             Jwt jwt = jwtDecoder.decode(accessToken);
             return 200;
         } catch (ExpiredJwtException e) {
+            System.out.println("엑세스 토큰 만료: " + e.getMessage());
             return 401;
+        } catch (io.jsonwebtoken.security.SignatureException e) {
+            System.out.println("서명 불일치: " + e.getMessage());
+            return 403;
         } catch (JwtException e) {
+            System.out.println("JWT 검증 실패: " + e.getMessage());
             return 403;
         }
     }
@@ -52,6 +63,8 @@ public class JwtProvider {
     // 리프레쉬 토큰 검증 로직 -> 이것까지 만료되면 로그아웃 후 로그인 페이지로 이동 권장
     public boolean ExpiredRefreshToken(String refreshToken, String SecretKey){
         try {
+            System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
+
             JwtDecoder jwtDecoder = createJwtDecoder(SecretKey);
             Jwt jwt = jwtDecoder.decode(refreshToken);
             return false;
@@ -67,6 +80,9 @@ public class JwtProvider {
             Jwt jwt = jwtDecoder.decode(accessToken);
 
             Object userIdObj = jwt.getClaim("userid"); // "userId" 클레임에서 값 추출 -> Long/ Integer 구분 불가
+            if (userIdObj == null) {
+                throw new JwtException("JWT에서 userid 클레임을 찾을 수 없음");
+            }
             System.out.println("Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
 
             if (userIdObj instanceof Number) {
@@ -74,6 +90,7 @@ public class JwtProvider {
             }
             return null;
         }catch (JwtException e){
+            System.out.println("JWT 검증 실패: " + e.getMessage());
             return null;
         }
     }
@@ -86,19 +103,30 @@ public class JwtProvider {
             Jwt jwt = jwtDecoder.decode(refreshToken);
 
             Object userIdObj = jwt.getClaim("userid"); // "userId" 클레임에서 값 추출 -> Long/ Integer 구분 불가
-            System.out.println("🔍 Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
+
+            if (userIdObj == null) {
+                throw new JwtException("JWT에서 userid 클레임을 찾을 수 없음");
+            }
+
+            System.out.println("Extracted userIdObj: " + userIdObj + " (Type: " + userIdObj.getClass().getSimpleName() + ")");
 
             if (userIdObj instanceof Number) {
                 return ((Number) userIdObj).intValue(); // Integer 타입으로 리턴
             }
             return null;
         } catch (JwtException e) {
+            System.out.println("JWT 검증 실패: " + e.getMessage());
             return null;
         }
     }
 
     private JwtDecoder createJwtDecoder(String SecretKey) {
         byte[] keyBytes = SecretKey.getBytes();
+
+        if (keyBytes.length < 32) {
+            throw new IllegalArgumentException("SecretKey 길이가 32바이트 이상이어야 합니다.");
+        }
+
         SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(secretKeySpec).build();
     }

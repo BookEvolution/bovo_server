@@ -19,6 +19,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Service
 public class KakaoServiceImpl implements KakaoService {
     private final KakaoConfig kakaoConfig;
@@ -101,11 +103,9 @@ public class KakaoServiceImpl implements KakaoService {
     }
 
     @Override
-    public Integer ExistKakaoUserId(Long KakaoUserId) {
+    public Optional<Integer> ExistKakaoUserId(Long KakaoUserId) {
         return kakaoUserAuthRepository.ExistKakaoUserId(KakaoUserId)
-                .get()
-                .getUsers()
-                .getId();
+                .map(userAuth -> userAuth.getUsers().getId());
     }
 
     @Override

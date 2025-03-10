@@ -59,9 +59,10 @@ public class securityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfig() {
+        String ngrokUrl = System.getenv("NGROK_URL");
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://localhost:5173"); // 프론트 주소
-//        corsConfiguration.addAllowedOrigin("https://5bc7-112-158-33-80.ngrok-free.app");
+        corsConfiguration.addAllowedOrigin(ngrokUrl);
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
         corsConfiguration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
         corsConfiguration.setAllowCredentials(true); // 쿠키 허용

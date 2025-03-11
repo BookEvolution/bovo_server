@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "medal")
@@ -27,6 +28,9 @@ public class Medal {
     @Column(nullable = true)
     private MedalType medalType;
 
+    @Column(nullable = false)
+    private LocalDate weekStartDate;
+
     @Column(nullable = true)
-    private LocalDate medalDate;
+    private LocalDateTime medalAt;
 }

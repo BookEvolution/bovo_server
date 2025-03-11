@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,10 @@ public class JwtFilter extends OncePerRequestFilter {
             System.out.println("🛠 [DEBUG] GET 요청 도착: " + requestURI);
         }
 
-        if (request.getMethod().equals("GET") && !requestURI.contains("/my-page")) {
+        if (request.getMethod().equals("GET") && !requestURI.contains("/my-page")
+                && !requestURI.contains("/main") && !requestURI.contains("/search")
+                && !requestURI.contains("/book-info") && !requestURI.contains("/archive")
+                && !requestURI.contains("/chatroom") && !requestURI.contains("/rewards")) {
             System.out.println("GET 요청 - JwtFilter 적용 안함: " + requestURI);
             filterChain.doFilter(request, response);
             return;

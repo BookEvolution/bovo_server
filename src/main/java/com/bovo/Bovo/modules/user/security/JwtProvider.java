@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -20,12 +21,16 @@ public class JwtProvider {
     public String createAccessToken(Integer userid, String SecretKey, long expireTimeAccess) {
         System.out.println("현재 사용 중인 SecretKey: " + SecretKey);
 
-        return Jwts.builder()
+        String accessToken = Jwts.builder()
                 .claim("userid", userid)
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plusMillis(expireTimeAccess)))
                 .signWith(Keys.hmacShaKeyFor(SecretKey.getBytes()))
                 .compact();
+
+        System.out.println("🔍 [DEBUG] 발급된 JWT: " + accessToken);
+        return accessToken;
+//        return Base64.getUrlEncoder().withoutPadding().encodeToString(accessToken.getBytes());
     }
 
     // 리프레쉬 토큰 발급

@@ -36,6 +36,16 @@ public class JwtFilter extends OncePerRequestFilter {
         final String requestURI = request.getRequestURI();
         System.out.println("현재 요청: "+ requestURI);
 
+        if (request.getMethod().equals("OPTIONS")) {
+            System.out.println("🛠 [DEBUG] OPTIONS 요청 - CORS 프리플라이트 통과");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (request.getMethod().equals("GET")) {
+            System.out.println("🛠 [DEBUG] GET 요청 도착: " + requestURI);
+        }
+
         if (request.getMethod().equals("GET") && !requestURI.contains("/my-page")) {
             System.out.println("GET 요청 - JwtFilter 적용 안함: " + requestURI);
             filterChain.doFilter(request, response);
@@ -64,6 +74,7 @@ public class JwtFilter extends OncePerRequestFilter {
         System.out.println(requestURI + ": 엑세스 토큰 존재");
 
         String accessToken = authorization.split(" ")[1];
+        System.out.println("🔍 [DEBUG] 서버가 받은 JWT: " + accessToken);
         int result = jwtProvider.ExpiredAccessToken(accessToken, SecretKey);
         if (result == 200) {
             System.out.println(requestURI + ": SecurityContextHolder 저장 시작");

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ArchiveRepository extends JpaRepository<MyBooks, Long> {
-    // userId 컬럼(또는 연관된 User 엔티티의 id)으로 등록된 책 목록을 조회
+public interface ArchiveRepository extends JpaRepository<MyBooks, Integer> {
+    // userId로 내 서재 조회
     List<MyBooks> findByUsers_Id(Integer userId);
 }
-

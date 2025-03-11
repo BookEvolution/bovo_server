@@ -6,9 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "mission_list")
 @Getter

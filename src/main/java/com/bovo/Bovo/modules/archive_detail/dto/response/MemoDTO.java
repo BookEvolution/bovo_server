@@ -8,7 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MemoDTO {
+    @JsonProperty("memo_id")
     private Integer memoId;
+
+    @JsonProperty("memo_date")
     private String memoDate;
 
     @JsonProperty("memo_Q")

@@ -7,8 +7,7 @@ import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateTokenDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.sevcie.KakaoService;
-import com.bovo.Bovo.modules.user.kakaoLogin.sevcie.KakaoServiceImpl;
+import com.bovo.Bovo.modules.user.kakaoLogin.service.KakaoService;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.AuthorizationCodeDto;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,11 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class KakaoController {
-    private KakaoService kakaoService;
+    private final KakaoService kakaoService;
 
     @PostMapping("/kakao/login")
     public ResponseEntity<GenerateTokenDto> KakaoLogin(@RequestBody AuthorizationCodeDto authorizationCodeDto, HttpServletResponse response) {
@@ -37,10 +38,12 @@ public class KakaoController {
         Long KakaoUserId = kakaoService.getUserIdFromKakao(createdKakaoTokenDto.getKakaoAccessToken());
 
         // 디비에 추출한 카카오 id를 가진 튜플 찾아서 userId 리턴
-        Integer userId = kakaoService.ExistKakaoUserId(KakaoUserId);
+        Optional<Integer> OptionalUserId = kakaoService.ExistKakaoUserId(KakaoUserId);
 
         // 기존 카카오 로그인 이용자라면 토큰 저장, 응답 후 로그인 처리
-        if (userId != null) {
+        if (OptionalUserId.isPresent()) {
+            Integer userId = OptionalUserId.get();
+
             // 로컬 토큰 발급
             GenerateLocalTokenDto generateLocalTokenDto = kakaoService.GenerateLocalToken(userId);
             // 토큰 디비 저장
@@ -75,8 +78,9 @@ public class KakaoController {
                 KakaoUserId);
 
         // 생성된 userId로 로컬 토큰 발급, 디비 저장
+        Integer userId = users.getId();
         GenerateLocalTokenDto generateLocalTokenDto = kakaoService.GenerateLocalToken(userId);
-        kakaoService.SaveNewLocalRefreshToken(users.getId(), generateLocalTokenDto.getLocalRefreshToken());
+        kakaoService.SaveNewLocalRefreshToken(userId, generateLocalTokenDto.getLocalRefreshToken());
 
         // 응답 후 로그인 처리
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken",

@@ -1,6 +1,5 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.sevcie;
+package com.bovo.Bovo.modules.user.kakaoLogin.service;
 
-import com.bovo.Bovo.common.Provider;
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
@@ -18,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 @Service
 public class KakaoServiceImpl implements KakaoService {
@@ -101,11 +102,9 @@ public class KakaoServiceImpl implements KakaoService {
     }
 
     @Override
-    public Integer ExistKakaoUserId(Long KakaoUserId) {
+    public Optional<Integer> ExistKakaoUserId(Long KakaoUserId) {
         return kakaoUserAuthRepository.ExistKakaoUserId(KakaoUserId)
-                .get()
-                .getUsers()
-                .getId();
+                .map(userAuth -> userAuth.getUsers().getId());
     }
 
     @Override

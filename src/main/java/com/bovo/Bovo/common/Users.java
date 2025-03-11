@@ -39,6 +39,9 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MyMissionProgress> myMissionProgress = new ArrayList<>();
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessage> chatMessage = new ArrayList<>();
+
     // 카카오 로그인 추가 시 null 허용으로 변경 예정
     @Column
     private String email;

@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "mission_complete")
@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MissionComplete {
+public class MyMissionProgress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,26 @@ public class MissionComplete {
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = false)
-    private MissionList missionList;
+    private Mission mission;
 
     @Column(nullable = false)
-    private LocalDateTime completedTime;
+    private int missionCnt;
+
+    @Column(nullable = false)
+    private LocalDateTime missionAt;
+
+    @Column(nullable = false)
+    private boolean isCompleted;
+
+    @Column(nullable = false)
+    private boolean isGoalExpGiven;
+
+    @Column(nullable = false)
+    private LocalDateTime completeAt;
+
+    @Column(nullable = false)
+    private LocalDate weekStartDate;
 }
 

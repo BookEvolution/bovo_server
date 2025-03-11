@@ -37,7 +37,7 @@ public class Users {
     private Medal medal;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MissionComplete> missionComplete = new ArrayList<>();
+    private List<MyMissionProgress> myMissionProgress = new ArrayList<>();
 
     // 카카오 로그인 추가 시 null 허용으로 변경 예정
     @Column

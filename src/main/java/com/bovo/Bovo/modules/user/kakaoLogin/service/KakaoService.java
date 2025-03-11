@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.sevcie;
+package com.bovo.Bovo.modules.user.kakaoLogin.service;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
@@ -6,12 +6,14 @@ import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
 import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
 
+import java.util.Optional;
+
 public interface KakaoService {
     CreatedKakaoTokenDto getKakaoToken(String code);
 
     Long getUserIdFromKakao(String KakaoAccessToken);
 
-    Integer ExistKakaoUserId(Long KakaoUserId);
+    Optional<Integer> ExistKakaoUserId(Long KakaoUserId);
 
     GenerateLocalTokenDto GenerateLocalToken(Integer userId);
 

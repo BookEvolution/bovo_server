@@ -24,7 +24,7 @@ public class MyPageRepositoryImpl implements MyPageRepository {
     @Override
     public PartialProfileDto findPartialByUserId(Integer userId) {
         return em.createQuery(
-                        "SELECT new com.bovo.Bovo.modules.my_page.dto.response.partial.PartialProfileDto(u.profile_picture, u.nickname, u.level, u.exp) FROM Users u WHERE u.id = : userId"
+                        "SELECT new com.bovo.Bovo.modules.my_page.dto.response.partial.PartialProfileDto(u.profile_picture, u.nickname, u.level, u.exp) FROM Users u WHERE u.id = :userId"
                         , PartialProfileDto.class)
                 .setParameter("userId", userId)
                 .getSingleResult();

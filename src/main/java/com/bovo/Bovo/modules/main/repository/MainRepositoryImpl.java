@@ -37,7 +37,7 @@ public class MainRepositoryImpl implements MainRepository {
     @Override
     public RecentBookInfoDto getRecentBookInfoByUserId(Integer userId) {
         try {
-            return em.createQuery("SELECT new com.bovo.Bovo.modules.main.dto.response.RecentBookInfoDto(b.bookName, b.bookAuthor, b.bookCover, b.recentlyCorrectionDate, b.bookScore) FROM MyBooks b WHERE b.users.id = :userId AND b.readingStatus = 'READING' ORDER BY b.recentlyCorrectionDate DESC"
+            return em.createQuery("SELECT new com.bovo.Bovo.modules.main.dto.response.RecentBookInfoDto(b.bookName, b.bookAuthor, b.bookCover, b.readingStartDate, b.bookScore) FROM MyBooks b WHERE b.users.id = :userId AND b.readingStatus = 'READING' ORDER BY b.recentlyCorrectionDate DESC"
                             , RecentBookInfoDto.class)
                     .setParameter("userId", userId)
                     .setMaxResults(1)

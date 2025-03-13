@@ -14,6 +14,6 @@ public class RecentBookInfoDto {
     private String bookName;
     private String bookAuthor;
     private String bookCover;
-    private LocalDate recentlyCorrectionDate;
+    private LocalDate readingStartDate;
     private BigDecimal bookScore;
 }

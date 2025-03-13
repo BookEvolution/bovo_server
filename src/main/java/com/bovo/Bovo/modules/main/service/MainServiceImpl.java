@@ -1,10 +1,11 @@
 package com.bovo.Bovo.modules.main.service;
 
-import com.bovo.Bovo.modules.main.dto.response.BookListDto;
-import com.bovo.Bovo.modules.main.dto.response.RecentBookInfoDto;
-import com.bovo.Bovo.modules.main.dto.response.UserInfoDto;
+import com.bovo.Bovo.modules.main.dto.response.partial.RecentBookInfoDto;
+import com.bovo.Bovo.modules.main.dto.response.partial.UserInfoDto;
 import com.bovo.Bovo.modules.main.repository.MainRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class MainServiceImpl implements MainService {
@@ -25,7 +26,7 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public BookListDto getBookListByUserId(Integer userId) {
+    public Map<String, String> getBookListByUserId(Integer userId) {
         return mainRepository.getBookListByUserId(userId);
     }
 }

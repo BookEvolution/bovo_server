@@ -66,6 +66,7 @@ public class Users {
                 .profile_picture(profile_picture)
                 .nickname(nickname)
                 .email(email)
+                .level(1)
                 .join_date(LocalDateTime.now())
                 .build();
     }

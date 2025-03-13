@@ -54,7 +54,7 @@ public class MyPageServiceImpl implements MyPageService {
             n_update = myPageRepository.newNicknameUpdate(nickname, userId);
         }
         if (password != null) {
-            w_update = myPageRepository.newNicknameUpdate(bCryptPasswordEncoder.encode(password), userId);
+            w_update = myPageRepository.newPassword(bCryptPasswordEncoder.encode(password), userId);
         }
 
         if (p_update && n_update && w_update) {

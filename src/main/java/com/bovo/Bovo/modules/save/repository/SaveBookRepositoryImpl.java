@@ -63,9 +63,9 @@ public MyBooks findBookByIsbnAndUserId(String isbn, Integer user_id) {
 public void saveBook(Integer user_id, String isbn, String book_name, String book_author, String book_cover,
                      String publication_date, String reading_start_date, String reading_end_date,
                      String book_score, String book_total_pages, String book_current_pages,
-                     ReadingStatus reading_status, String recently_correction_date) { // ✅ Enum 타입 유지
+                     ReadingStatus reading_status, String recently_correction_date) {
 
-    Users user = em.find(Users.class, user_id); // 사용자 정보 조회
+    Users user = em.find(Users.class, user_id);
     if (user == null) {
         throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
     }
@@ -75,17 +75,26 @@ public void saveBook(Integer user_id, String isbn, String book_name, String book
     book.setIsbn(isbn);
     book.setBookName(book_name);
     book.setBookAuthor(book_author);
+    book.setReadingStatus(reading_status);
+
+    // ✅ 서버에서 날짜 설정 (nullable 고려)
+    LocalDate startDate = (reading_start_date != null) ? LocalDate.parse(reading_start_date) : LocalDate.now();
+    LocalDate correctionDate = (recently_correction_date != null) ? LocalDate.parse(recently_correction_date) : startDate;
+    LocalDate endDate = (reading_end_date != null) ? LocalDate.parse(reading_end_date) : startDate; // 기본값 startDate
+
+    book.setReadingStartDate(startDate);
+    book.setRecentlyCorrectionDate(correctionDate);
+    book.setReadingEndDate(endDate); // ✅ `nullable=false`이므로 반드시 값 설정
+
+    // ✅ Nullable 처리
     book.setBookCover(book_cover);
     book.setPublicationDate(publication_date != null ? LocalDate.parse(publication_date) : null);
-    book.setReadingStartDate(LocalDate.parse(reading_start_date));
-    book.setReadingEndDate(LocalDate.parse(reading_end_date));
-    book.setBookScore(new BigDecimal(book_score));
-    book.setBookTotalPages(Integer.parseInt(book_total_pages));
-    book.setBookCurrentPages(Integer.parseInt(book_current_pages));
-    book.setReadingStatus(reading_status); // ✅ DTO에서 변환된 Enum 그대로 저장
-    book.setRecentlyCorrectionDate(LocalDate.parse(recently_correction_date));
+    book.setBookScore(BigDecimal.ZERO); // 기본값 0
+    book.setBookTotalPages(book_total_pages != null ? Integer.parseInt(book_total_pages) : 0);
+    book.setBookCurrentPages(book_current_pages != null ? Integer.parseInt(book_current_pages) : 0);
 
-    em.persist(book); // ✅ DB에 저장
+    em.persist(book);
 }
+
 
 }

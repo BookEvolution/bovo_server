@@ -28,7 +28,7 @@ public class SearchController {
                                          @RequestParam(defaultValue = "accuracy") String sort,
                                          @RequestParam(defaultValue = "20") Integer size) {
 
-        System.out.println(query);
+        System.out.println("query = " + query);
 
 
         // 강제 디코딩 인코딩

@@ -17,23 +17,16 @@ public class SaveBookRequestDto {
     private String book_score;
     private String book_total_pages;
     private String book_current_pages;
-    private String reading_status; // JSON에서 "ing", "end", "wish" 값이 들어옴
+    private String is_complete_reading; // JSON에서 "ing", "end", "wish" 값이 들어옴
     private String recently_correction_date;
 
     // ✅ "ing", "end", "wish" 값을 ReadingStatus Enum으로 변환
     public ReadingStatus getReadingStatusEnum() {
-        if (reading_status == null) {
-            throw new IllegalArgumentException("읽기 상태 값이 필요합니다.");
-        }
-        switch (reading_status.toLowerCase()) {
-            case "ing":
-                return ReadingStatus.READING;
-            case "end":
-                return ReadingStatus.COMPLETED;
-            case "wish":
-                return ReadingStatus.WANT_TO_READ;
-            default:
-                throw new IllegalArgumentException("잘못된 읽기 상태: " + reading_status);
-        }
+        return switch (is_complete_reading.toLowerCase()) {
+            case "ing" -> ReadingStatus.READING;
+            case "end" -> ReadingStatus.COMPLETED;
+            case "wish" -> ReadingStatus.WANT_TO_READ;
+            default -> throw new IllegalArgumentException("잘못된 읽기 상태 값: " + is_complete_reading);
+        };
     }
 }

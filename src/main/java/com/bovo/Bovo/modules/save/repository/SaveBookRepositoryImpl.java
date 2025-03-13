@@ -24,31 +24,39 @@ public class SaveBookRepositoryImpl implements SaveBookRepository {
 
     // ✅ ISBN + 사용자 ID로 도서 조회 (MyBooks 엔티티 자체 반환)
     @Override
-    public MyBooks findBookByIsbnAndUserId(String isbn, Integer user_id) {
-        try {
-            return em.createQuery(
-                    "SELECT b FROM MyBooks b WHERE b.isbn = :isbn AND b.users.id = :user_id",
-                    MyBooks.class
-                )
-                .setParameter("isbn", isbn)
-                .setParameter("user_id", user_id)
-                .getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+public MyBooks findBookByIsbnAndUserId(String isbn, Integer user_id) {
+    try {
+        System.out.println("[DEBUG] findBookByIsbnAndUserId() 호출됨: user_id = " + user_id + ", isbn = " + isbn);
+
+        return em.createQuery(
+                "SELECT b FROM MyBooks b WHERE b.isbn = :isbn AND b.users.id = :user_id", // ✅ MyBooks 엔티티를 직접 조회
+                MyBooks.class
+            )
+            .setParameter("isbn", isbn)
+            .setParameter("user_id", user_id)  // ✅ user_id 바인딩 확인
+            .getSingleResult();
+    } catch (NoResultException e) {
+        System.out.println("[DEBUG] 도서를 찾을 수 없음 (isbn: " + isbn + ", user_id: " + user_id + ")");
+        return null;
     }
+}
+
 
     // ✅ ISBN + 사용자 ID로 중복 확인
     @Override
     public boolean existsByIsbnAndUserId(String isbn, Integer user_id) {
+        System.out.println("[DEBUG] existsByIsbnAndUserId() 호출됨: user_id = " + user_id + ", isbn = " + isbn);
+
         Long count = em.createQuery(
-                "SELECT COUNT(b) FROM MyBooks b WHERE b.isbn = :isbn AND b.users.id = :user_id",
-                Long.class
-            )
-            .setParameter("isbn", isbn)
-            .getSingleResult();
+                        "SELECT COUNT(b) FROM MyBooks b WHERE b.isbn = :isbn AND b.users.id = :user_id", // ✅ MyBooks 엔티티 기반 쿼리 수정
+                        Long.class
+                )
+                .setParameter("isbn", isbn)
+                .setParameter("user_id", user_id)
+                .getSingleResult();
         return count > 0;
     }
+
 
     // ✅ 도서 저장
     @Override

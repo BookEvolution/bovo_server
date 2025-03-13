@@ -19,7 +19,7 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "https://4e02-165-246-206-167.ngrok-free.app")); // ngrok 사용하실 때 사용하시는 ngrok 주소로 변경해주세요.
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "https://2cc3-222-112-255-159.ngrok-free.app")); // ngrok 사용하실 때 사용하시는 ngrok 주소로 변경해주세요.
         System.out.println("CORS Allowed Origins: " + corsConfiguration.getAllowedOrigins());
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")); // 허용할 HTTP 메서드
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));

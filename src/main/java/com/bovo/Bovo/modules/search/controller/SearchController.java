@@ -32,8 +32,8 @@ public class SearchController {
 
 
         // 강제 디코딩 인코딩
-String decodedQuery = URLDecoder.decode(query, StandardCharsets.UTF_8);
-    String encodedQuery = URLEncoder.encode(decodedQuery, StandardCharsets.UTF_8);
+        String decodedQuery = URLDecoder.decode(query, StandardCharsets.UTF_8);
+        String encodedQuery = URLEncoder.encode(decodedQuery, StandardCharsets.UTF_8);
 
         // Kakao API 호출 URL 생성
         String url = UriComponentsBuilder.fromHttpUrl(KAKAO_API_URL)

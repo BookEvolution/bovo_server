@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.user.dto.security;
 
+import com.bovo.Bovo.common.Provider;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +12,19 @@ import java.util.List;
 @Getter
 public class AuthenticatedUserId implements UserDetails {
     private final Integer userId;
-    private final String provider;
+    private final Provider provider;
 
-    public AuthenticatedUserId(Integer userId, String provider) {
+    public AuthenticatedUserId(Integer userId, Provider provider) {
         this.userId = userId;
         this.provider = provider;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public Provider getProvider() {
+        return provider;
     }
 
     @Override
@@ -30,6 +39,6 @@ public class AuthenticatedUserId implements UserDetails {
 
     @Override
     public String getUsername() {
-        return String.valueOf();
+        return String.valueOf(userId);
     }
 }

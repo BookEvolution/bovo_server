@@ -1,10 +1,14 @@
 package com.bovo.Bovo.modules.kakaoLogin.service;
 
+import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.modules.kakaoLogin.repository.KakaoUserAuthRepository;
+import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SocialUserDetailsService implements UserDetailsService {
@@ -15,8 +19,10 @@ public class SocialUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Integer userId = Integer.parseInt(username);
+        Optional<User_Auth> userAuth = kakaoUserAuthRepository.findUserAuthByUserId(userId);
 
-        return null;
+        return new AuthenticatedUserId(userId, userAuth.get().getProvider());
     }
 }

@@ -1,13 +1,13 @@
 package com.bovo.Bovo.common;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "mission_list")
+@Table(name = "mission")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class Mission {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private MissionName missionName;
+    private MissionType missionType;
 
     @Column(nullable = false)
     private int expPerMission; // 미션 수행 경험치

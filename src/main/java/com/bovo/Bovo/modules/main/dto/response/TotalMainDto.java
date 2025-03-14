@@ -1,7 +1,10 @@
 package com.bovo.Bovo.modules.main.dto.response;
 
+import com.bovo.Bovo.modules.main.dto.response.partial.RecentBookInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -13,5 +16,5 @@ public class TotalMainDto {
     private int level;
     private int total_book_num;
     private RecentBookInfoDto recent_book_info;
-    private BookListDto book_list;
+    private Map<String, String> book_list;
 }

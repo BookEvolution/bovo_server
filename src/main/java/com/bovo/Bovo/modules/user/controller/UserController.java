@@ -45,7 +45,7 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new defResponseDto(201, "사용가능한 닉네임"));
+                .body(new defResponseDto(200, "사용가능한 닉네임"));
     }
 
     @PostMapping("/register/email")
@@ -57,7 +57,7 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new defResponseDto(201, "사용가능한 이메일"));
+                .body(new defResponseDto(200, "사용가능한 이메일"));
     }
 
 
@@ -77,7 +77,7 @@ public class UserController {
 
         userService.save(signupDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new defResponseDto(201, "회원가입 성공"));
+                .body(new defResponseDto(200, "회원가입 성공"));
     }
 
     @PostMapping("/login")
@@ -139,36 +139,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new JwtTokenResponseDto(200, "엑세스 토큰 재발급 완료", NewAccessToken));
     }
-
-    /*@PostMapping("/my-page/logout")
-    public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
-        System.out.println("로그아웃 실행"+refreshToken);
-
-        SecurityContextHolder.clearContext();
-
-        if (refreshToken != null) {
-            Integer userId = userService.extractUserIdFromRefreshToken(refreshToken);
-            if (userId != null) {
-                boolean delete = userService.deleteRefreshToken(userId);
-            }
-        }
-
-        expiredCookie(response);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new defResponseDto(200, "로그아웃 성공"));
-    }
-
-    @DeleteMapping("/my-page/profile/delete")
-    public ResponseEntity<DeleteUserDto> userdelete(@RequestBody EmailDto emailDto) {
-        // 이메일로 조회해서 삭제하기
-        if (!userService.existEmail(emailDto.getEmail())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new DeleteUserDto(404, "존재하지 않은 사용자 이메일",null));
-        }
-
-        Integer deleteUserId = userService.deleteUserByEmail(emailDto.getEmail());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new DeleteUserDto(200, "회원 탈퇴 성공", deleteUserId));
-    }*/
 }

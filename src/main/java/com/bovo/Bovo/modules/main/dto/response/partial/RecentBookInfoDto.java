@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.main.dto.response;
+package com.bovo.Bovo.modules.main.dto.response.partial;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +14,6 @@ public class RecentBookInfoDto {
     private String bookName;
     private String bookAuthor;
     private String bookCover;
-    private LocalDate recentlyCorrectionDate;
+    private LocalDate readingStartDate;
     private BigDecimal bookScore;
 }

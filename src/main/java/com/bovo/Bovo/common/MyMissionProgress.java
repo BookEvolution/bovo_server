@@ -1,16 +1,16 @@
 package com.bovo.Bovo.common;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "mission_complete")
+@Table(name = "my_mission_progress")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

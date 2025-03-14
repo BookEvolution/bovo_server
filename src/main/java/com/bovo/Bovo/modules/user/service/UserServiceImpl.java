@@ -1,6 +1,5 @@
 package com.bovo.Bovo.modules.user.service;
 
-import com.bovo.Bovo.common.Provider;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.modules.user.dto.request.LoginDto;
@@ -8,9 +7,6 @@ import com.bovo.Bovo.modules.user.dto.request.SignupDto;
 import com.bovo.Bovo.modules.user.repository.UserAuthRepository;
 import com.bovo.Bovo.modules.user.repository.UserRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
-import jakarta.servlet.http.Cookie;
-import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.main.dto.response;
+package com.bovo.Bovo.modules.main.dto.response.partial;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

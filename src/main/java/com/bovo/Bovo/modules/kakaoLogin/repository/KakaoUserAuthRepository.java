@@ -1,8 +1,8 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.repository;
+package com.bovo.Bovo.modules.kakaoLogin.repository;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
 
 import java.util.Optional;
 

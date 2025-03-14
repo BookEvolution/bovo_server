@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.config;
+package com.bovo.Bovo.modules.kakaoLogin.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,12 +1,12 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.service;
+package com.bovo.Bovo.modules.kakaoLogin.service;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.KakaoConfig;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.repository.KakaoUserAuthRepository;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.config.KakaoConfig;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.repository.KakaoUserAuthRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

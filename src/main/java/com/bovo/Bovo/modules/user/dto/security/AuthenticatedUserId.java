@@ -1,5 +1,8 @@
 package com.bovo.Bovo.modules.user.dto.security;
 
+import lombok.Getter;
+
+@Getter
 public class AuthenticatedUserId {
     private final Integer userId;
 
@@ -7,7 +10,4 @@ public class AuthenticatedUserId {
         this.userId = userId;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
 }

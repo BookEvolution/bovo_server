@@ -1,10 +1,10 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.service;
+package com.bovo.Bovo.modules.kakaoLogin.service;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
 
 import java.util.Optional;
 

@@ -1,15 +1,15 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.controller;
+package com.bovo.Bovo.modules.kakaoLogin.controller;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.user.dto.response.defResponseDto;
 import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response.GenerateTokenDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.service.KakaoService;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.AuthorizationCodeDto;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response.GenerateTokenDto;
+import com.bovo.Bovo.modules.kakaoLogin.service.KakaoService;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.AuthorizationCodeDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,24 +1,17 @@
 package com.bovo.Bovo.modules.user.security;
 
 import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
-import com.bovo.Bovo.modules.user.service.UserService;
-import com.bovo.Bovo.modules.user.service.UserServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {

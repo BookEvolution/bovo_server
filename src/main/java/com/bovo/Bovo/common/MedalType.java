@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum MedalType {
+    NONE("미지급"),
     BM("동메달"),
     SM("은메달"),
     GM("금메달"),

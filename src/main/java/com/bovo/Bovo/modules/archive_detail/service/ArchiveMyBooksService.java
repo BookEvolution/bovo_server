@@ -46,11 +46,22 @@ public class ArchiveMyBooksService {
                 .star(book.getBookScore().multiply(BigDecimal.TWO).intValue())
                 .startDate(localDateToString(book.getReadingStartDate()))
                 .endDate(localDateToString(book.getReadingEndDate()))
-                .status(book.getReadingStatus().getDescription())
+                .status(setBookReadingStatusDto(book))
                 .build();
 
 
         return bookDTO;
+    }
+
+    private static String setBookReadingStatusDto(MyBooks book) {
+        if(book.getReadingStatus().equals(ReadingStatus.WANT_TO_READ)){
+            return "wish";
+        } else if (book.getReadingStatus().equals(ReadingStatus.READING)){
+            return "ing";
+        } else if (book.getReadingStatus().equals(ReadingStatus.COMPLETED)) {
+            return "end";
+        }
+        return "오류";
     }
 
     public String localDateToString(LocalDate date) {

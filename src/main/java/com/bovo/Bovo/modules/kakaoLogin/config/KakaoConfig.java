@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.kakaoLogin;
+package com.bovo.Bovo.modules.kakaoLogin.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

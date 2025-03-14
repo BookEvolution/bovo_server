@@ -1,8 +1,8 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.repository;
+package com.bovo.Bovo.modules.kakaoLogin.repository;
 
 import com.bovo.Bovo.common.User_Auth;
 import com.bovo.Bovo.common.Users;
-import com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
+import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
 
 import java.util.Optional;
 
@@ -18,4 +18,10 @@ public interface KakaoUserAuthRepository {
     void SaveNewLocalRefreshTokenToDB(Integer userId, String LocalRefreshToken);
 
     void SaveNewKakaoUserInfo(NewKakaoUserDto newKakaoUserDto, Integer userId);
+
+    Optional<User_Auth> findUserAuthByUserId(Integer userId);
+
+    String getKakaoAccessTokenByUserId(Integer userId);
+
+    boolean deleteKakaoTokenForLogout(Integer userId);
 }

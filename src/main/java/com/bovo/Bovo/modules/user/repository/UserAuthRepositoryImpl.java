@@ -11,7 +11,7 @@ import java.util.Optional;
 @Slf4j
 @Repository
 @Transactional
-public class UserAuthRepositoryImpl implements UserAuthRepository{
+public class UserAuthRepositoryImpl implements UserAuthRepository {
     private final EntityManager em;
 
     public UserAuthRepositoryImpl(EntityManager em) {

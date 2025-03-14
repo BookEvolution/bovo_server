@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.response;
+package com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

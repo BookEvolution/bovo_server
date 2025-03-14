@@ -25,7 +25,9 @@ public class MainController {
 
     @GetMapping("/main")
     public ResponseEntity<TotalMainDto> loadMain(@AuthenticationPrincipal AuthenticatedUserId user) {
+        System.out.println("main Controller!!!!!");
         Integer userId = user.getUserId();
+        System.out.println("userId: " + userId);
 
         UserInfoDto userInfoDto = mainService.getUserInfoByUserId(userId);
         int totalBookNum = myPageService.countCompletedBooksByUserId(userId);
@@ -36,9 +38,5 @@ public class MainController {
                 .body(new TotalMainDto(200, "메인 페이지 로드 완료",
                         userInfoDto.getProfile_picture(), userInfoDto.getNickname(), userInfoDto.getLevel(), totalBookNum,
                         recentBookInfoDto, bookList));
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(new TotalMainDto(200, "메인 페이지 로드 완료",
-//                        userInfoDto.getProfile_picture(), userInfoDto.getNickname(), userInfoDto.getLevel(), 30,
-//                        recentBookInfoDto, bookList));
     }
 }

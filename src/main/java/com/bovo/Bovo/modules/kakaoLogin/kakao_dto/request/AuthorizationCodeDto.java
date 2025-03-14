@@ -1,4 +1,4 @@
-package com.bovo.Bovo.modules.user.kakaoLogin.kakao_dto.request;
+package com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorizationCodeDto {
-    private String AuthorizationCode;
+    private String authCode;
 }

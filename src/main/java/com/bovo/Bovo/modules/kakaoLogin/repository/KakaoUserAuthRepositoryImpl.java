@@ -74,4 +74,12 @@ public class KakaoUserAuthRepositoryImpl implements KakaoUserAuthRepository {
         }
     }
 
+    @Override
+    public Optional<User_Auth> findUserAuthByUserId(Integer userId) {
+        User_Auth userAuth = em.createQuery("SELECT u FROM User_Auth u WHERE u.users.id = :userId", User_Auth.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return Optional.ofNullable(userAuth);
+    }
+
 }

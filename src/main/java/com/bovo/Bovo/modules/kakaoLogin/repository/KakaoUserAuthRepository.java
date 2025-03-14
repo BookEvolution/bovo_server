@@ -18,4 +18,6 @@ public interface KakaoUserAuthRepository {
     void SaveNewLocalRefreshTokenToDB(Integer userId, String LocalRefreshToken);
 
     void SaveNewKakaoUserInfo(NewKakaoUserDto newKakaoUserDto, Integer userId);
+
+    Optional<User_Auth> findUserAuthByUserId(Integer userId);
 }

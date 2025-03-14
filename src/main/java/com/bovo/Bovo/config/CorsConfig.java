@@ -23,6 +23,7 @@ public class CorsConfig {
         System.out.println("CORS Allowed Origins: " + corsConfiguration.getAllowedOrigins());
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")); // 허용할 HTTP 메서드
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+        corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addExposedHeader("Set-Cookie");
         corsConfiguration.setAllowCredentials(true); // JWT 토큰을 쿠키에 넣어서 전달하므로
 

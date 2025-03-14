@@ -19,15 +19,7 @@ public class ArchiveController {
         this.archiveService = archiveService;
     }
 
-    // userId를 받아서 내 서재 조회
-    // (1) 경로변수로 userId 받는 방법 (임시 테스트용)
-//    @GetMapping("/{user_id}")
-//    public ResponseEntity<ArchiveResponseDto> getMyBooks(@PathVariable("user_id") Integer userId) {
-//        ArchiveResponseDto response = archiveService.getMyBooks(userId);
-//        return ResponseEntity.ok(response);
-//    }
-
-    // (2) @AuthenticationPrincipal 사용하여 userId 받는 방법
+    // userId로 내 서재 조회
     @GetMapping
     public ResponseEntity<ArchiveResponseDto> getMyBooks(@AuthenticationPrincipal Users users) {
         Integer userId = users.getId();

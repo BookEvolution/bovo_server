@@ -5,6 +5,7 @@ import com.bovo.Bovo.common.MyBooks;
 import com.bovo.Bovo.common.ReadingNotes;
 import com.bovo.Bovo.modules.archive_detail.dto.request.BookUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateRequestDto;
+import com.bovo.Bovo.modules.archive_detail.dto.request.MemoOrderDTO;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.*;
 import com.bovo.Bovo.modules.archive_detail.service.ArchiveMyBooksService;
@@ -108,7 +109,9 @@ public class ArchiveDetailController {
 
     // 기록 순서 변경
     @PutMapping("/{book_id}/memos")
-    public MemoReorderResponseDto reorderMemos(@PathVariable("book_id") Integer bookId, @AuthenticationPrincipal AuthenticatedUserId user) {
-        return new MemoReorderResponseDto();
+    public MemoReorderResponseDto reorderMemos(@PathVariable("book_id") Integer bookId, @AuthenticationPrincipal AuthenticatedUserId user,@RequestBody MemoOrderDTO requestDTO) {
+        System.out.println(requestDTO.getBookId());
+        readingNotesService.orderUpdateMemo(requestDTO);
+        return new MemoReorderResponseDto("변경 완료");
     }
 }

@@ -28,12 +28,16 @@ public class ArchiveMyBooksService {
     private final ArchiveMyBooksRepository myBooksRepository;
 
     //책 id, 유저 id 이용해서 책 정보 가져오기
-    public MyBooks myBookInfo(Integer bookId, Integer userId) {
+    public MyBooks myBookInfo(Integer bookId, Integer userId)  {
         //책 가져오기
         MyBooks book = myBooksRepository.findOne(bookId);
 
         //유저 아이디로 검증
-
+//        boolean validation = book.getUsers().getId().equals(userId);
+//
+//        if (!validation) {
+//            throw new RuntimeException("유저가 가지고 있는 책이 아닙니다");
+//        }
 
         return book;
     }

@@ -30,14 +30,14 @@ public class CreateChatRoomRequestDTO {
     @AllArgsConstructor
     public static class BookInfoDTO {
         @JsonProperty("book_name")
-        @NotBlank
+        //@NotBlank
         private String bookName;
 
         @JsonProperty("book_cover")
         private String bookCover;
 
         @JsonProperty("book_author")
-        @NotBlank
+        //@NotBlank
         private String bookAuthor;
     }
 

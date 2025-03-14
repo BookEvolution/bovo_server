@@ -6,9 +6,8 @@ import com.bovo.Bovo.common.Participation;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.chatrooms.dto.ChatMessageDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.request.CreateChatRoomRequestDTO;
-import com.bovo.Bovo.modules.chatrooms.dto.response.ChatRoomDTO;
-import com.bovo.Bovo.modules.chatrooms.dto.response.ChatRoomListDTO;
-import com.bovo.Bovo.modules.chatrooms.dto.response.GetChatInfoModalDTO;
+import com.bovo.Bovo.modules.chatrooms.dto.response.*;
+import com.bovo.Bovo.modules.chatrooms.repository.ChatMessageRepository;
 import com.bovo.Bovo.modules.chatrooms.repository.ChatRoomRepository;
 import com.bovo.Bovo.modules.chatrooms.repository.ChatroomUsersRepository;
 import com.bovo.Bovo.modules.chatrooms.repository.ParticipationRepository;
@@ -17,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ParticipationRepository participationRepository;
     private final ChatroomUsersRepository userRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     //챗룸 가져오기
     public List<ChatRoom> getAllChatRooms() {
@@ -38,6 +40,39 @@ public class ChatRoomService {
     //유저 챗룸 가져오기
     public List<ChatRoom> getMyChatRooms(Integer userId) {
         return participationRepository.findChatRoomsByUser(userRepository.getReferenceById(userId));
+    }
+
+    public List<MyChatRoomResponseDTO> mapMyChatRoomDTO(List<ChatRoom> chatRooms) {
+        List<MyChatRoomResponseDTO> myChatRoomResponseDTOList = new ArrayList<>();
+
+        for (ChatRoom chatRoom : chatRooms) {
+            Optional<ChatMessage> lastMessage = chatMessageRepository.findFirstByChatRoomOrderByTimestampDesc(chatRoom);
+
+            String message = lastMessage
+                    .map(ChatMessage::getMessage)
+                    .orElse("최근 메시지가 없습니다.");
+            LocalDateTime time = lastMessage
+                    .map(ChatMessage::getTimestamp)
+                    .orElse(LocalDateTime.now());
+
+
+            MyChatRoomResponseDTO temp = MyChatRoomResponseDTO.builder()
+                    .id(chatRoom.getId())
+                    .chatroomName(chatRoom.getChatName())
+                    .bookInfo(MyChatRoomResponseDTO.BookInfo.builder()
+                            .bookImg(chatRoom.getBookCover())
+                            .build())
+                    .lastMsgInfo(MyChatRoomResponseDTO.LastMessageInfo.builder()
+                            .lastMessage(message)
+                            .lastMessageDate(time)
+                            .build())
+                    .noReadingCount(0)
+                    .build();
+            myChatRoomResponseDTOList.add(temp);
+
+        }
+
+        return myChatRoomResponseDTOList;
     }
 
     //챗룸 디티오 매핑
@@ -58,6 +93,10 @@ public class ChatRoomService {
                 .id(chatRoom.getId())
                 .chatroomName(chatRoom.getChatName())
                 .chatroomDs(chatRoom.getChatInfo())
+                .bookInfo(ChatRoomDTO.BookInfo.builder()
+                        .bookImg(chatRoom.getBookCover())
+                        .bookName(chatRoom.getBookName())
+                        .build())
                 .duration(ChatRoomDTO.Duration.builder()
                         .startDate(chatRoom.getChallengeStartDate())
                         .endDate(chatRoom.getChallengeEndDate())

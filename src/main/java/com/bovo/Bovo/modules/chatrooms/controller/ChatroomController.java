@@ -6,6 +6,7 @@ import com.bovo.Bovo.modules.chatrooms.dto.request.CreateChatRoomRequestDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.request.SecretAnswerDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.response.ChatRoomListDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.response.GetChatInfoModalDTO;
+import com.bovo.Bovo.modules.chatrooms.dto.response.MyChatRoomResponseDTO;
 import com.bovo.Bovo.modules.chatrooms.service.ChatRoomService;
 import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,15 @@ public class ChatroomController {
     }
 
     @GetMapping("/my")
-    public ChatRoomListDTO getMyChatroomList(@AuthenticationPrincipal AuthenticatedUserId user) {
+    public List<MyChatRoomResponseDTO> getMyChatroomList(@AuthenticationPrincipal AuthenticatedUserId user) {
         Integer userId = user.getUserId();
         List<ChatRoom> myChatRooms = Objects.requireNonNullElse(chatRoomService.getMyChatRooms(userId),
                 Collections.emptyList());
 
-        return chatRoomService.ChatRoomToChatRoomListDto(myChatRooms);
+
+
+
+        return chatRoomService.mapMyChatRoomDTO(myChatRooms);
     }
 
 
@@ -56,6 +60,7 @@ public class ChatroomController {
     @GetMapping("/{roomId}")
     public GetChatInfoModalDTO getChatroomModal(@AuthenticationPrincipal AuthenticatedUserId user, @PathVariable Integer roomId) {
         chatRoomService.mapGetChatInfoModalDTO(roomId);
+
         return chatRoomService.mapGetChatInfoModalDTO(roomId);
     }
 

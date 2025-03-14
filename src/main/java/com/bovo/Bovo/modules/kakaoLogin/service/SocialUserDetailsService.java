@@ -23,6 +23,10 @@ public class SocialUserDetailsService implements UserDetailsService {
         Integer userId = Integer.parseInt(username);
         Optional<User_Auth> userAuth = kakaoUserAuthRepository.findUserAuthByUserId(userId);
 
-        return new AuthenticatedUserId(userId, userAuth.get().getProvider());
+        if (userAuth.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with ID: " + userId);
+        }
+
+        return new AuthenticatedUserId(userId, userAuth.get().getProvider().name());
     }
 }

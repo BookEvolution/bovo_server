@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.user.security;
 
+import com.bovo.Bovo.modules.kakaoLogin.service.SocialUserDetailsService;
 import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,7 +8,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,10 +21,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final String SecretKey;
     private final JwtProvider jwtProvider;
+    private final SocialUserDetailsService socialUserDetailsService;
 
-    public JwtFilter(@Value("${jwt.secretkey}") String secretKey, JwtProvider jwtProvider) {
+    public JwtFilter(@Value("${jwt.secretkey}") String secretKey, JwtProvider jwtProvider, SocialUserDetailsService socialUserDetailsService) {
         this.SecretKey = secretKey;
         this.jwtProvider = jwtProvider;
+        this.socialUserDetailsService = socialUserDetailsService;
         System.out.println("JwtFilter 생성됨!");
     }
 
@@ -78,15 +83,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
             Integer userId = jwtProvider.ExtractUserIdFromAccessToken(accessToken, SecretKey); // 토큰에서 userId 추출
             System.out.println("JWT에서 추출된 userId: " + userId);
-            AuthenticatedUserId ExtractedUserId = new AuthenticatedUserId(userId); // 추출한 userId를 DTO에 저장
 
-            // ***
+            UserDetails userDetails = socialUserDetailsService.loadUserByUsername(String.valueOf(userId));
 
-            // AbstractAuthenticationToken을 상속한 CustomAuthenticationToken로 userPrincipal을 매개변수로 전달하여 인증 객체 생성
-            AuthenticationToken authenticationToken = new AuthenticationToken(ExtractedUserId);
-            authenticationToken.setAuthenticated(true);
+            UsernamePasswordAuthenticationToken authenticationToken
+                    = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            // SecurityContextHolder에 사용자 정보 저장
 
-            // SecurityContextHolder에 저장
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             System.out.println("SecurityContext에 저장된 인증 객체: " + SecurityContextHolder.getContext().getAuthentication());
 

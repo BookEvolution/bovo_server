@@ -18,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -48,7 +49,7 @@ public class KakaoServiceImpl implements KakaoService {
         this.expireTimeRefresh = expireTimeRefresh;
     }
 
-    public CreatedKakaoTokenDto getKakaoToken(String code) {
+    public CreatedKakaoTokenDto getKakaoTokenFromKakao(String code) {
         String getTokenUrl = "https://kauth.kakao.com/oauth/token";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -71,21 +72,10 @@ public class KakaoServiceImpl implements KakaoService {
                     .build();
         } catch (JsonProcessingException e) {
             throw new RuntimeException("카카오 토큰 파싱 오류", e);
-
-//        HTTP/1.1 200
-//        Content-Type: application/json;charset=UTF-8
-//        {
-//            "token_type":"bearer",
-//                "access_token":"${ACCESS_TOKEN}",
-//                "expires_in":43199,
-//                "refresh_token":"${REFRESH_TOKEN}",
-//                "refresh_token_expires_in":5184000,
-//                "scope":"account_email profile"
-//        }
         }
     }
 
-    public Long getUserIdFromKakao(String KakaoAccessToken) {
+    public Long getKakaoIdFromKakao(String KakaoAccessToken) {
         String tokenInfoUrl = "https://kapi.kakao.com/v1/user/access_token_info";
 
         HttpHeaders headers = new HttpHeaders();
@@ -126,7 +116,10 @@ public class KakaoServiceImpl implements KakaoService {
                 .profile_picture(null)
                 .nickname(null)
                 .email(null)
+                .join_date(LocalDateTime.now())
                 .build();
+        System.out.println("생성된 User: " + users);
+        System.out.println("User의 join_date: " + users.getJoin_date());
         kakaoUserAuthRepository.SaveNewUserToDB(users);
         return users;
     }
@@ -146,6 +139,41 @@ public class KakaoServiceImpl implements KakaoService {
     @Override
     public void SaveNewKakaoUser(NewKakaoUserDto newKakaoUserDto, Integer userId) {
         kakaoUserAuthRepository.SaveNewKakaoUserInfo(newKakaoUserDto, userId);
+    }
+
+    @Override
+    public void logoutFromKakao(String KakaoAccessToken) {
+        String logoutKakaoUrl = "https://kapi.kakao.com/v1/user/logout";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + KakaoAccessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(logoutKakaoUrl, HttpMethod.POST, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("카카오 사용자 로그아웃 성공");
+        }else {
+            System.out.println("카카오 사용자 로그아웃 실패" + response.getStatusCode());
+        }
+    }
+
+    @Override
+    public String findKakaoUserByUserId(Integer userId) {
+        return kakaoUserAuthRepository.findUserAuthByUserId(userId)
+                .get()
+                .getProvider()
+                .name();
+    }
+
+    @Override
+    public String getKakaoAccessToken(Integer userId) {
+        return kakaoUserAuthRepository.getKakaoAccessTokenByUserId(userId);
+    }
+
+    @Override
+    public boolean deleteKakaoTokenForLogout(Integer userId) {
+        return kakaoUserAuthRepository.deleteKakaoTokenForLogout(userId);
     }
 
 

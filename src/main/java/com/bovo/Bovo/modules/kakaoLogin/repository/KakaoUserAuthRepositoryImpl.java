@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -22,10 +23,10 @@ public class KakaoUserAuthRepositoryImpl implements KakaoUserAuthRepository {
 
     @Override
     public Optional<User_Auth> ExistKakaoUserId(Long kakaoUserId) {
-        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.socialId= :kakaoUserId", User_Auth.class)
+        List<User_Auth> userAuthList = em.createQuery("SELECT u FROM User_Auth u WHERE u.socialId= :kakaoUserId", User_Auth.class)
                 .setParameter("kakaoUserId", kakaoUserId)
-                .getSingleResult();
-        return Optional.ofNullable(usera); // db에 email이 존재하면 1, 존재하지 않으면 0
+                .getResultList();
+        return userAuthList.isEmpty() ? Optional.empty() : Optional.of(userAuthList.get(0));
     }
 
     @Override
@@ -54,9 +55,12 @@ public class KakaoUserAuthRepositoryImpl implements KakaoUserAuthRepository {
 
     @Override
     public void SaveNewLocalRefreshTokenToDB(Integer userId, String LocalRefreshToken) {
-        User_Auth usera = em.createQuery("SELECT u FROM User_Auth u WHERE u.users.id= :userId", User_Auth.class)
+        List<User_Auth> userAuthList = em.createQuery("SELECT u FROM User_Auth u WHERE u.users.id= :userId", User_Auth.class)
                 .setParameter("userId", userId)
-                .getSingleResult();
+                .getResultList();
+
+        User_Auth usera = userAuthList.isEmpty() ? null : userAuthList.get(0);
+
         if (usera != null) {
             usera.setRefreshToken(LocalRefreshToken);
         }
@@ -67,10 +71,19 @@ public class KakaoUserAuthRepositoryImpl implements KakaoUserAuthRepository {
         Users users = em.createQuery("SELECT u FROM Users u WHERE u.id = :userId", Users.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
+
+        User_Auth userAuth = em.createQuery("SELECT ua FROM User_Auth ua WHERE ua.users.id = :userId", User_Auth.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+
         if (users != null) {
             users.setProfile_picture(newKakaoUserDto.getProfile_picture());
             users.setNickname(newKakaoUserDto.getNickname());
             users.setEmail(newKakaoUserDto.getEmail());
+        }
+
+        if (userAuth != null) {
+            userAuth.setEmail(newKakaoUserDto.getEmail());
         }
     }
 
@@ -80,6 +93,25 @@ public class KakaoUserAuthRepositoryImpl implements KakaoUserAuthRepository {
                 .setParameter("userId", userId)
                 .getSingleResult();
         return Optional.ofNullable(userAuth);
+    }
+
+    @Override
+    public String getKakaoAccessTokenByUserId(Integer userId) {
+        String KakaoAccessToken = em.createQuery("SELECT u FROM User_Auth u WHERE u.users.id = :userId", User_Auth.class)
+                .setParameter("userId", userId)
+                .getSingleResult()
+                .getKakaoAccessToken();
+        return KakaoAccessToken;
+    }
+
+    @Override
+    public boolean deleteKakaoTokenForLogout(Integer userId) {
+        User_Auth userAuth = em.createQuery("SELECT u FROM User_Auth u WHERE u.users.id = :userId", User_Auth.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        userAuth.setKakaoAccessToken(null);
+        userAuth.setKakaoRefreshToken(null);
+        return true;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.my_page.controller;
 
+import com.bovo.Bovo.modules.kakaoLogin.service.KakaoService;
 import com.bovo.Bovo.modules.my_page.dto.request.NewProfileUpdateDto;
 import com.bovo.Bovo.modules.my_page.dto.response.ProfileDetailDto;
 import com.bovo.Bovo.modules.my_page.dto.response.ProfileUpdateFormDto;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
     private final UserService userService;
     private final MyPageService myPageService;
+    private final KakaoService kakaoService;
 
     private void expiredCookie(HttpServletResponse responseCookie) {
         ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
@@ -45,14 +47,28 @@ public class MyPageController {
     public ResponseEntity<defResponseDto> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         System.out.println("로그아웃 실행"+refreshToken);
 
-        SecurityContextHolder.clearContext();
+//        if (refreshToken != null) {
+//            Integer userIdFromRefreshToken = userService.extractUserIdFromRefreshToken(refreshToken);
+//            if (userIdFromRefreshToken != null) {
+//                boolean delete = userService.deleteRefreshToken(userIdFromRefreshToken);
+//            }
+//        }
 
-        if (refreshToken != null) {
-            Integer userId = userService.extractUserIdFromRefreshToken(refreshToken);
-            if (userId != null) {
-                boolean delete = userService.deleteRefreshToken(userId);
-            }
+        Integer userIdFromRefreshToken = userService.extractUserIdFromRefreshToken(refreshToken);
+        if (userIdFromRefreshToken != null) {
+            boolean delete = userService.deleteRefreshToken(userIdFromRefreshToken);
         }
+
+        if ("KAKAO".equals(kakaoService.findKakaoUserByUserId(userIdFromRefreshToken))) {
+            String KakaoAccessToken = kakaoService.getKakaoAccessToken(userIdFromRefreshToken);
+            kakaoService.logoutFromKakao(KakaoAccessToken);
+            kakaoService.deleteKakaoTokenForLogout(userIdFromRefreshToken);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new defResponseDto(200, "카카오 로그아웃 성공"));
+        }
+
+        SecurityContextHolder.clearContext();
 
         expiredCookie(response);
         return ResponseEntity.status(HttpStatus.OK)
@@ -111,7 +127,7 @@ public class MyPageController {
     }
 
     @PutMapping("/profile/update")
-    public ResponseEntity<defResponseDto> updateProfileUpdateForm(@RequestBody NewProfileUpdateDto newProfileUpdateDto, @AuthenticationPrincipal AuthenticatedUserId user) {
+    public ResponseEntity<defResponseDto> updateProfile(@RequestBody NewProfileUpdateDto newProfileUpdateDto, @AuthenticationPrincipal AuthenticatedUserId user) {
         Integer userId = user.getUserId();
         if (!myPageService.newProfileUpdate(
                 newProfileUpdateDto.getProfile_picture(),

@@ -1,23 +1,16 @@
 package com.bovo.Bovo.modules.user.controller;
 
 import com.bovo.Bovo.modules.user.dto.request.*;
-import com.bovo.Bovo.modules.user.dto.response.DeleteUserDto;
 import com.bovo.Bovo.modules.user.dto.response.JwtTokenResponseDto;
 import com.bovo.Bovo.modules.user.dto.response.defResponseDto;
 import com.bovo.Bovo.modules.user.service.UserService;
-import com.bovo.Bovo.modules.user.service.UserServiceImpl;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController

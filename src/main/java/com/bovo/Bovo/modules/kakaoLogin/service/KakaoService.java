@@ -9,9 +9,9 @@ import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
 import java.util.Optional;
 
 public interface KakaoService {
-    CreatedKakaoTokenDto getKakaoToken(String code);
+    CreatedKakaoTokenDto getKakaoTokenFromKakao(String code);
 
-    Long getUserIdFromKakao(String KakaoAccessToken);
+    Long getKakaoIdFromKakao(String KakaoAccessToken);
 
     Optional<Integer> ExistKakaoUserId(Long KakaoUserId);
 
@@ -26,4 +26,12 @@ public interface KakaoService {
     void SaveNewLocalRefreshToken(Integer userId, String LocalRefreshToken);
 
     void SaveNewKakaoUser(NewKakaoUserDto newKakaoUserDto, Integer userId);
+
+    void logoutFromKakao(String KakaoAccessToken);
+
+    String findKakaoUserByUserId(Integer userId);
+
+    String getKakaoAccessToken(Integer userId);
+
+    boolean deleteKakaoTokenForLogout(Integer userId);
 }

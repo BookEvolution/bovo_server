@@ -53,7 +53,7 @@ public class securityConfig {
 //                    auth.requestMatchers("/**", "/error", "/static/**").permitAll(); // 개발 중 임시 인증 없이 허용
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Preflight 요청 허용
                     System.out.println("OPTIONS 요청 허용됨");
-                    auth.requestMatchers(HttpMethod.POST,"/","/login", "/my-page/logout", "/register", "/register/nickname", "/register/email", "/refresh").permitAll(); // 로그인과 회원가입 인증 없이 허용
+                    auth.requestMatchers(HttpMethod.POST,"/","/login", "/my-page/logout", "/register", "/register/nickname", "/register/email", "/refresh", "/kakao/login").permitAll(); // 로그인과 회원가입 인증 없이 허용
                     auth.requestMatchers(HttpMethod.GET, "/my-page/**", "/main/**", "/search/**", "/book-info/**","/archive/**", "/chatrooms/**", "/rewards/**").authenticated();
                     auth.requestMatchers(HttpMethod.GET, "/**").permitAll();
                     auth.requestMatchers(HttpMethod.DELETE, "/**").authenticated();

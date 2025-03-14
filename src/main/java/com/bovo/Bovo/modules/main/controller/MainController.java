@@ -25,7 +25,9 @@ public class MainController {
 
     @GetMapping("/main")
     public ResponseEntity<TotalMainDto> loadMain(@AuthenticationPrincipal AuthenticatedUserId user) {
+        System.out.println("main Controller!!!!!");
         Integer userId = user.getUserId();
+        System.out.println("userId: " + userId);
 
         UserInfoDto userInfoDto = mainService.getUserInfoByUserId(userId);
         int totalBookNum = myPageService.countCompletedBooksByUserId(userId);

@@ -10,6 +10,7 @@ import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response.GenerateTokenDto;
 import com.bovo.Bovo.modules.kakaoLogin.service.KakaoService;
 import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.AuthorizationCodeDto;
 import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
+import com.bovo.Bovo.modules.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KakaoController {
     private final KakaoService kakaoService;
+    private final UserService userService;
 
     @PostMapping("/kakao/login")
     public ResponseEntity<GenerateTokenDto> KakaoLogin(@RequestBody AuthorizationCodeDto authorizationCodeDto, HttpServletResponse response) {
         // 카카오 엑세스/ 리프레쉬 토큰 발급
-        CreatedKakaoTokenDto createdKakaoTokenDto = kakaoService.getKakaoToken(authorizationCodeDto.getAuthorizationCode());
+        CreatedKakaoTokenDto createdKakaoTokenDto = kakaoService.getKakaoTokenFromKakao(authorizationCodeDto.getAuthCode());
 
         // 카카오 토큰 정보 보기 - 카카오 id 추출
-        Long KakaoUserId = kakaoService.getUserIdFromKakao(createdKakaoTokenDto.getKakaoAccessToken());
+        Long KakaoUserId = kakaoService.getKakaoIdFromKakao(createdKakaoTokenDto.getKakaoAccessToken());
 
         // 디비에 추출한 카카오 id를 가진 튜플 찾아서 userId 리턴
         Optional<Integer> OptionalUserId = kakaoService.ExistKakaoUserId(KakaoUserId);
@@ -93,12 +95,24 @@ public class KakaoController {
                 .build();
         response.setHeader("Set-Cookie", refreshTokenCookie.toString());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body((new GenerateTokenDto(200, "신규 카카오 이용자 로그인 성공", createdKakaoTokenDto.getKakaoAccessToken())));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body((new GenerateTokenDto(201, "신규 카카오 이용자 로그인 성공", generateLocalTokenDto.getLocalAccessToken())));
     }
 
     @PostMapping("/kakao/register")
     public ResponseEntity<defResponseDto> NewKakaoLogin(@AuthenticationPrincipal AuthenticatedUserId user, @RequestBody NewKakaoUserDto newKakaoUserDto, HttpServletResponse response) {
+        // nickname이 db에 존재하는지 확인
+        if (userService.existNickname(newKakaoUserDto.getNickname())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new defResponseDto(400, "닉네임 중복"));
+        }
+
+        // email이 db에 존재하는지 확인
+        if (userService.existEmail(newKakaoUserDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new defResponseDto(400, "이메일 중복"));
+        }
+
         // 엑세스 토큰에서 userId 추출
         Integer userId = user.getUserId();
 

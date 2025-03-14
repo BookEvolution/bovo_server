@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorizationCodeDto {
-    private String AuthorizationCode;
+    private String authCode;
 }

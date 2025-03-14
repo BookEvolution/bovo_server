@@ -29,4 +29,9 @@ public class SocialUserDetailsService implements UserDetailsService {
 
         return new AuthenticatedUserId(userId, userAuth.get().getProvider().name());
     }
+
+    public String getProviderByUserId(Integer userId) {
+        Optional<User_Auth> userAuth = kakaoUserAuthRepository.findUserAuthByUserId(userId);
+        return userAuth.get().getProvider().name();
+    }
 }

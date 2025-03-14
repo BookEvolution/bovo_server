@@ -20,4 +20,8 @@ public interface KakaoUserAuthRepository {
     void SaveNewKakaoUserInfo(NewKakaoUserDto newKakaoUserDto, Integer userId);
 
     Optional<User_Auth> findUserAuthByUserId(Integer userId);
+
+    String getKakaoAccessTokenByUserId(Integer userId);
+
+    boolean deleteKakaoTokenForLogout(Integer userId);
 }

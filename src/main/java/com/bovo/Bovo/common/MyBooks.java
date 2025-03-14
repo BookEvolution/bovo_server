@@ -42,7 +42,7 @@ public class MyBooks {
     @Column(nullable = false, length = 100)
     private String bookAuthor;
 
-    @Column(length = 100)
+    @Column(length = 500)
     @Nullable
     private String bookCover;
 

@@ -38,4 +38,7 @@ public class ReadingNotes {
 
     @Column(nullable = false)
     private LocalDate recentlyCorrectionDate; // 최근 수정 날짜 (최초 작성 날짜도 동일)
+
+    @Column(name = "order_index")
+    private Integer order;
 }

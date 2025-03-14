@@ -3,6 +3,7 @@ package com.bovo.Bovo.modules.archive_detail.service;
 import com.bovo.Bovo.common.MyBooks;
 import com.bovo.Bovo.common.ReadingNotes;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoCreateRequestDto;
+import com.bovo.Bovo.modules.archive_detail.dto.request.MemoOrderDTO;
 import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.MemoDTO;
 import com.bovo.Bovo.modules.archive_detail.repository.ArchiveReadingNotesRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -32,6 +34,7 @@ public class ReadingNotesService {
                 .memoQuestion(requestDto.getMemoQ())
                 .memoAnswer(requestDto.getMemoA())
                 .recentlyCorrectionDate(myBooksService.stringToLocalDate(requestDto.getMemoDate()))
+                .order(0)
                 .build();
         readingNotesRepository.save(memo);
     }
@@ -40,6 +43,9 @@ public class ReadingNotesService {
         MyBooks book = myBooksService.myBookInfo(bookId, userId);
 
         List<ReadingNotes> readingNotes = book.getReadingNotesList();
+
+        readingNotes.sort(Comparator.comparing(ReadingNotes::getOrder,Comparator.nullsLast(Comparator.naturalOrder())));
+                //.thenComparing(ReadingNotes::getId, Comparator.reverseOrder()));
 
         return readingNotes;
     }
@@ -112,6 +118,23 @@ public class ReadingNotesService {
         }else{
             throw new IllegalArgumentException("해당 메모를 삭제할 권한이 없습니다.");
         }
+
+
+    }
+
+    //메모 순서 변경
+    @Transactional
+    public void orderUpdateMemo(MemoOrderDTO requestDTO) {
+        List<Integer> memoOrder = requestDTO.getMemoOrder();
+
+        for (int i = 0; i < memoOrder.size(); i++) {
+            ReadingNotes memo = readingNotesRepository.memoFindOne(memoOrder.get(i));
+            memo.setOrder(i+1);
+
+            System.out.println(memo.getMemoAnswer());
+
+        }
+
 
     }
 

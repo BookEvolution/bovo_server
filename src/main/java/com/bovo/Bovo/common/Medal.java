@@ -21,16 +21,17 @@ public class Medal {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private Users users;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private MedalType medalType;
+    @Column(nullable = false)
+    @Builder.Default
+    private MedalType medalType = MedalType.NONE;
 
     @Column(nullable = false)
-    private LocalDate weekStartDate;
+    private LocalDate weekStartDate; // 훈장이 부여되는 주차 (매주 갱신됨)
 
-    @Column(nullable = true)
-    private LocalDateTime medalAt;
+    @Column(nullable = false)
+    private LocalDateTime medalAt; // 훈장이 갱신되는 시각
 }

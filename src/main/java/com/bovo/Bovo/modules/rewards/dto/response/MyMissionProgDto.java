@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL) // null인 필드는 제외하고 응답
 public class MyMissionProgDto {
-    private Integer missionId; // 미션 종류에 따라 값이 채워짐
+    private Integer missionId; // missionId에 대응되는 미션 유형의 필드값이 전달됨 (나머지 필드는 null)
 
     // 출석 미션 현황
     private Integer loginCnt;

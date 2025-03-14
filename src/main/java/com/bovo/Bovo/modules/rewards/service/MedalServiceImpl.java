@@ -24,9 +24,7 @@ public class MedalServiceImpl implements MedalService {
     private final MyMissionProgRepository myMissionProgRepository;
     private final MedalRepository medalRepository;
 
-    /**
-    * 매주 자동 훈장 업데이트
-    */
+    // 매주 자동 훈장 업데이트
     @Scheduled(cron = "0 0 0 * * MON") // 매주 월요일 자정(00:00) 실행
     @Transactional
     @Override
@@ -35,10 +33,10 @@ public class MedalServiceImpl implements MedalService {
         LocalDate lastWeekStartDate = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
         LocalDateTime lastWeekEndTime = lastWeekStartDate.plusDays(6).atTime(23, 59, 59);
 
-        // 모든 user의 지난 주 미션 수행 현황 조회
+        // 모든 user의 지난 주 미션 현황 조회
         List<MyMissionProgress> allProgress = myMissionProgRepository.findAllByWeekStartDate(lastWeekStartDate);
 
-        // user별 미션 수행 현황을 그룹화
+        // user별 미션 현황 그룹화
         Map<Integer, List<MyMissionProgress>> myProgressMap = allProgress.stream()
                 .collect(Collectors.groupingBy(progress -> progress.getUsers().getId()));
 

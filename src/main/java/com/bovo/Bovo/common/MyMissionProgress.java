@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "mission_complete")
+@Table(name = "my_mission_progress")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

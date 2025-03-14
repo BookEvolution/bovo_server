@@ -21,15 +21,14 @@ public class RewardsServiceImpl implements RewardsService {
     private final MyMissionProgRepository myMissionProgRepository;
     private final MedalRepository medalRepository;
 
+    // userId로 내 미션 현황 조회
     @Transactional
     @Override
     public MyMissionProgResponseDto getMyMissionProgByUserId(Integer userId) {
-
-        // userId로 내 미션 현황 목록 조회
         List<MyMissionProgress> myMissionProgList = myMissionProgRepository.findAllByUsers_Id(userId);
 
-        // MyMissionProgress 엔티티에서 필요한 필드값을 추출하여 DTO에 전달
-        // - MissionId를 통해 미션 유형에 맞게 전달됨
+        // MyMissionProgress의 필드값을 DTO로 전달
+        // - missionId에 대응되는 미션 유형의 필드값이 전달됨
         List<MyMissionProgDto> missions = myMissionProgList.stream()
                 .map(progress -> {
                     MyMissionProgDto.MyMissionProgDtoBuilder builder = MyMissionProgDto.builder()

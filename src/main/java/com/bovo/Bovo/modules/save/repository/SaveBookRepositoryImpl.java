@@ -91,7 +91,7 @@ public void saveBook(Integer user_id, String isbn, String book_name, String book
     book.setPublicationDate(publication_date != null ? LocalDate.parse(publication_date) : null);
     book.setBookScore(BigDecimal.ZERO); // 기본값 0
     book.setBookTotalPages(book_total_pages != null ? Integer.parseInt(book_total_pages) : 0);
-    book.setBookCurrentPages(book_current_pages != null ? Integer.parseInt(book_current_pages) : 0);
+        book.setBookCurrentPages(book_current_pages != null ? Integer.parseInt(book_current_pages) : 0);
 
     em.persist(book);
 }

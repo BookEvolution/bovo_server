@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,9 +27,6 @@ public class Medal {
     @Column(nullable = false)
     @Builder.Default
     private MedalType medalType = MedalType.NONE;
-
-    @Column(nullable = false)
-    private LocalDate weekStartDate; // 훈장이 부여되는 주차 (매주 갱신됨)
 
     @Column(nullable = false)
     private LocalDateTime medalAt; // 훈장이 갱신되는 시각

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,7 +31,8 @@ public class MedalServiceImpl implements MedalService {
     @Override
     public void assignWeeklyMedals() {
         // 자동 업데이트를 위한 시간 설정
-        LocalDate lastWeekStartDate = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
+        LocalDate lastWeekStartDate = LocalDate.now().minusWeeks(1)
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDateTime lastWeekEndTime = lastWeekStartDate.plusDays(6).atTime(23, 59, 59);
 
         // 모든 user의 지난 주 미션 현황 조회
@@ -40,7 +42,7 @@ public class MedalServiceImpl implements MedalService {
         Map<Integer, List<MyMissionProgress>> myProgressMap = allProgress.stream()
                 .collect(Collectors.groupingBy(progress -> progress.getUsers().getId()));
 
-        // user별 훈장 지급
+        // user별 훈장 지급 로직
         for (Map.Entry<Integer, List<MyMissionProgress>> entry : myProgressMap.entrySet()) {
             Integer userId = entry.getKey();
             List<MyMissionProgress> progressList = entry.getValue();
@@ -79,5 +81,9 @@ public class MedalServiceImpl implements MedalService {
             // 훈장 업데이트
             medalRepository.updateMedalByUserId(userId, assignedMedal, lastWeekStartDate, lastWeekEndTime);
         }
+
+        // 2주 전 미션 현황 데이터 삭제 (지난주, 이번주 데이터만 유지)
+        LocalDate thresholdDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        myMissionProgRepository.deleteAllByWeekStartDateBefore(thresholdDate);
     }
 }

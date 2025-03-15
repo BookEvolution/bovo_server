@@ -1,16 +1,14 @@
 package com.bovo.Bovo.common;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "my_mission_progress")
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,21 +28,21 @@ public class MyMissionProgress {
     private Mission mission;
 
     @Column(nullable = false)
-    private int missionCnt;
+    private int missionCnt = 0;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime missionAt;
 
     @Column(nullable = false)
-    private boolean isCompleted;
+    private boolean isCompleted = false;
 
     @Column(nullable = false)
-    private boolean isGoalExpGiven;
+    private boolean isGoalExpGiven = false;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime completeAt;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate weekStartDate;
 }
 

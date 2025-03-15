@@ -14,5 +14,5 @@ import lombok.Setter;
 public class MyMissionProgRequestDto {
 
     @NotNull(message = "userId는 필수 항목입니다.")
-    private Long userId;
+    private Integer userId;
 }

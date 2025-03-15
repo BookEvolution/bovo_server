@@ -63,7 +63,7 @@ public class RewardsServiceImpl implements RewardsService {
                 .orElse(MedalType.NONE);
 
         return MyMissionProgResponseDto.builder()
-                .myMissionProgDtoList(missions)
+                .missions(missions)
                 .medalType(medalType.name())
                 .build();
     }

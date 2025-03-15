@@ -90,19 +90,20 @@ public class JwtFilter extends OncePerRequestFilter {
             String provider = socialUserDetailsService.getProviderByUserId(userId);
 
             if ("KAKAO".equals(provider)) {
-//                try {
-//                    Long kakaoId = kakaoService.getKakaoIdFromKakao(accessToken); // 카카오 엑세스 토큰 검증 및 ID 추출
-//                    System.out.println("유효한 카카오 토큰 - 사용자 ID: " + kakaoId);
-//                } catch (Exception e) {
-//                    System.out.println("유효하지 않은 카카오 액세스 토큰");
-//                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//                    response.setContentType("application/json");
-//                    response.setCharacterEncoding("UTF-8");
-//                    response.getWriter().write("{\"status\": \"403\", \"message\": \"유효하지 않은 카카오 액세스 토큰\"}");
-//                    return;
                 String kakaoAccessToken = kakaoService.getKakaoAccessToken(userId);
-                Long kakaoId = kakaoService.getKakaoIdFromKakao(kakaoAccessToken); // 카카오 엑세스 토큰 검증 및 ID 추출
-                System.out.println("유효한 카카오 토큰 - 사용자 ID: " + kakaoId);
+                try {
+                    Long kakaoId = kakaoService.getKakaoIdFromKakao(kakaoAccessToken); // 카카오 엑세스 토큰 검증 및 ID 추출
+                    System.out.println("유효한 카카오 토큰 - 사용자 ID: " + kakaoId);
+                } catch (Exception e) {
+                    System.out.println("유효하지 않은 카카오 액세스 토큰");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"status\": \"403\", \"message\": \"유효하지 않은 카카오 액세스 토큰\"}");
+                    return;
+                    }
+//                Long kakaoId = kakaoService.getKakaoIdFromKakao(kakaoAccessToken); // 카카오 엑세스 토큰 검증 및 ID 추출
+//                System.out.println("유효한 카카오 토큰 - 사용자 ID: " + kakaoId);
             }
 
                 UserDetails userDetails = socialUserDetailsService.loadUserByUsername(String.valueOf(userId));

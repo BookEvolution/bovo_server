@@ -62,7 +62,10 @@ public class MyPageController {
         if ("KAKAO".equals(kakaoService.findKakaoUserByUserId(userIdFromRefreshToken))) {
             String KakaoAccessToken = kakaoService.getKakaoAccessToken(userIdFromRefreshToken);
             kakaoService.logoutFromKakao(KakaoAccessToken);
-            kakaoService.deleteKakaoTokenForLogout(userIdFromRefreshToken);
+            if (!kakaoService.deleteKakaoTokenForLogout(userIdFromRefreshToken)){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new defResponseDto(403, "카카오 로그아웃 서버 오류"));
+            }
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new defResponseDto(200, "카카오 로그아웃 성공"));
@@ -76,8 +79,16 @@ public class MyPageController {
     }
 
     @DeleteMapping("/profile/delete")
-    public ResponseEntity<DeleteUserDto> userdelete(@RequestBody EmailDto emailDto) {
+    public ResponseEntity<DeleteUserDto> userdelete(@AuthenticationPrincipal AuthenticatedUserId user ,@RequestBody EmailDto emailDto) {
         System.out.println("회원 탈퇴 로직 시작");
+        Integer userId = user.getUserId();
+        if ("KAKAO".equals(kakaoService.findKakaoUserByUserId(userId))) {
+            String kakaoAccessToken= kakaoService.getKakaoAccessToken(userId);
+            if (!kakaoService.deleteKakaoUser(kakaoAccessToken)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new DeleteUserDto(403, "카카오 회원 탈퇴 실패",null));
+            }
+        }
 
         // 이메일로 조회해서 삭제하기
         if (!userService.existEmail(emailDto.getEmail())) {

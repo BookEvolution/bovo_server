@@ -27,6 +27,8 @@ public interface KakaoService {
 
     void SaveNewKakaoUser(NewKakaoUserDto newKakaoUserDto, Integer userId);
 
+    void SaveKakaoNewRewards(Users users);
+
     void logoutFromKakao(String KakaoAccessToken);
 
     String findKakaoUserByUserId(Integer userId);
@@ -34,4 +36,6 @@ public interface KakaoService {
     String getKakaoAccessToken(Integer userId);
 
     boolean deleteKakaoTokenForLogout(Integer userId);
+
+    boolean deleteKakaoUser(String KakaoAccessToken);
 }

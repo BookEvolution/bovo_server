@@ -1,12 +1,12 @@
 package com.bovo.Bovo.modules.kakaoLogin.service;
 
-import com.bovo.Bovo.common.User_Auth;
-import com.bovo.Bovo.common.Users;
+import com.bovo.Bovo.common.*;
 import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.NewKakaoUserDto;
 import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.response.GenerateLocalTokenDto;
 import com.bovo.Bovo.modules.kakaoLogin.config.KakaoConfig;
 import com.bovo.Bovo.modules.kakaoLogin.kakao_dto.request.CreatedKakaoTokenDto;
 import com.bovo.Bovo.modules.kakaoLogin.repository.KakaoUserAuthRepository;
+import com.bovo.Bovo.modules.user.repository.RewardsRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,7 @@ public class KakaoServiceImpl implements KakaoService {
     private final KakaoConfig kakaoConfig;
     private final RestTemplate restTemplate;
     private final KakaoUserAuthRepository kakaoUserAuthRepository;
+    private final RewardsRepository rewardsRepository;
     private final JwtProvider jwtProvider;
 
     private final String SecretKey;
@@ -35,6 +37,7 @@ public class KakaoServiceImpl implements KakaoService {
     public KakaoServiceImpl(KakaoConfig kakaoConfig,
                             RestTemplate restTemplate,
                             KakaoUserAuthRepository kakaoUserAuthRepository,
+                            RewardsRepository rewardsRepository,
                             JwtProvider jwtProvider,
                             @Value("${jwt.secretkey}") String secretKey,
                             @Value("${jwt.expiredAccessToken}") Long expireTimeAccess,
@@ -43,6 +46,7 @@ public class KakaoServiceImpl implements KakaoService {
         this.kakaoConfig = kakaoConfig;
         this.restTemplate = restTemplate;
         this.kakaoUserAuthRepository = kakaoUserAuthRepository;
+        this.rewardsRepository = rewardsRepository;
         this.jwtProvider = jwtProvider;
         this.SecretKey = secretKey;
         this.expireTimeAccess = expireTimeAccess;
@@ -116,6 +120,7 @@ public class KakaoServiceImpl implements KakaoService {
                 .profile_picture(null)
                 .nickname(null)
                 .email(null)
+                .level(1)
                 .join_date(LocalDateTime.now())
                 .build();
         System.out.println("생성된 User: " + users);
@@ -139,6 +144,35 @@ public class KakaoServiceImpl implements KakaoService {
     @Override
     public void SaveNewKakaoUser(NewKakaoUserDto newKakaoUserDto, Integer userId) {
         kakaoUserAuthRepository.SaveNewKakaoUserInfo(newKakaoUserDto, userId);
+    }
+
+    @Override
+    public void SaveKakaoNewRewards(Users users) {
+        Medal medal = Medal.builder()
+                .users(users)
+                .medalType(MedalType.NONE)
+                .weekStartDate(LocalDateTime.now())
+                .medalAt(LocalDateTime.now())
+                .build();
+        rewardsRepository.saveMedal(medal);
+
+        List<Mission> missions = rewardsRepository.findAllMissions(); // 모든 미션 불러오기
+        System.out.println("미션 개수: " + missions.size());
+
+        for (Mission mission : missions) {
+            MyMissionProgress missionProgress = MyMissionProgress.builder()
+                    .users(users)
+                    .mission(mission)
+                    .missionCnt(0)
+                    .missionAt(null)
+                    .isCompleted(false)
+                    .isGoalExpGiven(false)
+                    .completeAt(null)
+                    .weekStartDate(null)
+                    .build();
+
+            rewardsRepository.saveMyMissionProgress(missionProgress);
+        }
     }
 
     @Override
@@ -174,6 +208,25 @@ public class KakaoServiceImpl implements KakaoService {
     @Override
     public boolean deleteKakaoTokenForLogout(Integer userId) {
         return kakaoUserAuthRepository.deleteKakaoTokenForLogout(userId);
+    }
+
+    @Override
+    public boolean deleteKakaoUser(String KakaoAccessToken) {
+        String deleteKakaoUrl = "https://kapi.kakao.com/v1/user/unlink";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + KakaoAccessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(deleteKakaoUrl, HttpMethod.POST, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("카카오 회원 탈퇴 성공");
+            return true;
+        }else {
+            System.out.println("카카오 회원 탈퇴 실패" + response.getStatusCode());
+            return false;
+        }
     }
 
 

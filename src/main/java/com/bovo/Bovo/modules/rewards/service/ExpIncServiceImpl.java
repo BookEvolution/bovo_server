@@ -1,20 +1,13 @@
 package com.bovo.Bovo.modules.rewards.service;
 
 import com.bovo.Bovo.common.Mission;
-import com.bovo.Bovo.common.MyMissionProgress;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.rewards.repository.MissionRepository;
 import com.bovo.Bovo.modules.rewards.repository.MyMissionProgRepository;
 import com.bovo.Bovo.modules.rewards.repository.RewardsUserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 
 @Service
 @RequiredArgsConstructor

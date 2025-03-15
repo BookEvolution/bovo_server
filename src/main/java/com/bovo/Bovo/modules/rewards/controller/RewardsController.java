@@ -1,8 +1,8 @@
 package com.bovo.Bovo.modules.rewards.controller;
 
-import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.rewards.dto.response.MyMissionProgResponseDto;
 import com.bovo.Bovo.modules.rewards.service.RewardsService;
+import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +21,8 @@ public class RewardsController {
     }
 
     @GetMapping
-    public ResponseEntity<MyMissionProgResponseDto> getMyMissionProg(@AuthenticationPrincipal Users users) {
-        Integer userId = users.getId();
+    public ResponseEntity<MyMissionProgResponseDto> getMyMissionProg(@AuthenticationPrincipal AuthenticatedUserId user) {
+        Integer userId = user.getUserId();
         MyMissionProgResponseDto response = rewardsService.getMyMissionProgByUserId(userId);
         return ResponseEntity.ok(response);
     }

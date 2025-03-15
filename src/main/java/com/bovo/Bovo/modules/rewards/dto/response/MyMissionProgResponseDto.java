@@ -15,6 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MyMissionProgResponseDto {
-    private List<MyMissionProgDto> myMissionProgDtoList;
+    private List<MyMissionProgDto> missions;
     private String medalType;
 }

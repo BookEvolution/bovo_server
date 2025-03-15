@@ -171,6 +171,7 @@ public class ChatRoomService {
                 .users(user)
                 .answer(answer)
                 .isLeader(setIsLeader(isLeader))
+                .participationTime(LocalDate.now())
                 .build();
 
         participationRepository.save(participation);

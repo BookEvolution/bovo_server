@@ -29,5 +29,8 @@ public class Medal {
     private MedalType medalType = MedalType.NONE;
 
     @Column(nullable = false)
+    private LocalDateTime weekStartDate;
+
+    @Column(nullable = false)
     private LocalDateTime medalAt; // 훈장이 갱신되는 시각
 }

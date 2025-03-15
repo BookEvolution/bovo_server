@@ -13,9 +13,6 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ExpIncRequestDto {
 
-    @NotNull(message = "user_id는 필수 항목입니다.")
-    private Integer userId;
-
     @NotNull(message = "mission_id는 필수 항목입니다.")
     private Integer missionId;
 }

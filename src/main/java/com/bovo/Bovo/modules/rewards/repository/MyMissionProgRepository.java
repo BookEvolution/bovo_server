@@ -15,7 +15,7 @@ public interface MyMissionProgRepository extends JpaRepository<MyMissionProgress
     List<MyMissionProgress> findAllByWeekStartDate(LocalDate lastWeekStartDate);
 
     // userId, missionId, weekStartDate로 미션 현황 조회
-    Optional<MyMissionProgress> findByUserIdAndMissionIdAndWeekStartDate(Integer userId, Integer missionId, LocalDate WeekStartDate);
+    Optional<MyMissionProgress> findByUsers_IdAndMission_IdAndWeekStartDate(Integer userId, Integer missionId, LocalDate WeekStartDate);
 
     // 특정 일자 이전 데이터 삭제
     void deleteAllByWeekStartDateBefore(LocalDate thresholdDate);

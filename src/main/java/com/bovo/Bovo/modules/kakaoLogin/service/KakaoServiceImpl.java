@@ -116,6 +116,7 @@ public class KakaoServiceImpl implements KakaoService {
                 .profile_picture(null)
                 .nickname(null)
                 .email(null)
+                .level(1)
                 .join_date(LocalDateTime.now())
                 .build();
         System.out.println("생성된 User: " + users);
@@ -174,6 +175,25 @@ public class KakaoServiceImpl implements KakaoService {
     @Override
     public boolean deleteKakaoTokenForLogout(Integer userId) {
         return kakaoUserAuthRepository.deleteKakaoTokenForLogout(userId);
+    }
+
+    @Override
+    public boolean deleteKakaoUser(String KakaoAccessToken) {
+        String deleteKakaoUrl = "https://kapi.kakao.com/v1/user/unlink";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + KakaoAccessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(deleteKakaoUrl, HttpMethod.POST, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("카카오 회원 탈퇴 성공");
+            return true;
+        }else {
+            System.out.println("카카오 회원 탈퇴 실패" + response.getStatusCode());
+            return false;
+        }
     }
 
 

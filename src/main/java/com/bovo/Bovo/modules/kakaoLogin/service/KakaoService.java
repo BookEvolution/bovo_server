@@ -34,4 +34,6 @@ public interface KakaoService {
     String getKakaoAccessToken(Integer userId);
 
     boolean deleteKakaoTokenForLogout(Integer userId);
+
+    boolean deleteKakaoUser(String KakaoAccessToken);
 }

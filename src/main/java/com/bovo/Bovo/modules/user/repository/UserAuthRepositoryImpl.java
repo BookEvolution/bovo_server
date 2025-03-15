@@ -20,7 +20,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository {
 
     @Override
     public boolean existEmail(String email) {
-        Long num = em.createQuery("SELECT count(u) FROM User_Auth u WHERE u.email= :email AND u.provider='LOCAL'", Long.class)
+        Long num = em.createQuery("SELECT count(u) FROM User_Auth u WHERE u.email= :email", Long.class)
                 .setParameter("email", email)
                 .getSingleResult();
         return num>0; // db에 email이 존재하면 1, 존재하지 않으면 0

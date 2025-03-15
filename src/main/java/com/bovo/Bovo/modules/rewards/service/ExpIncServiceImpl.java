@@ -18,22 +18,25 @@ import java.time.temporal.TemporalAdjusters;
 
 @Service
 @RequiredArgsConstructor
-public class ExpIncServiceImpl {
+public class ExpIncServiceImpl implements ExpIncService {
 
     private final RewardsUserRepository rewardsUserRepository;
     private final MissionRepository missionRepository;
     private final MyMissionProgRepository myMissionProgRepository;
 
+    // 퀘스트 달성 경험치 지급
+    @Override
     @Transactional
-    public void performMission(Integer userId, Integer missionId) {
+    public void updateGoalExp(Integer userId, Integer missionId) {
 
         Users user = rewardsUserRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new EntityNotFoundException("Mission not found with id: " + missionId));
 
-        // 경험치 지급 및 레벨업 처리
+        // 기본 및 목표 달성 경험치 지급 및 레벨업
         updateUserExpAndLevel(user, mission.getExpPerMission());
+        updateUserExpAndLevel(user, mission.getExpPerGoal());
 
         // 미션 진행 현황 업데이트
         updateMissionProgress(user, mission);
@@ -42,6 +45,7 @@ public class ExpIncServiceImpl {
         rewardsUserRepository.save(user);
     }
 
+    // 경험치 지급 및 레벨업
     private void updateUserExpAndLevel(Users user, int earnedExp) {
         int currentExp = user.getExp();
         int updatedExp = currentExp + earnedExp;
@@ -58,6 +62,7 @@ public class ExpIncServiceImpl {
         user.setLevel(currentLevel);
     }
 
+    // 미션 진행 현황 업데이트
     private void updateMissionProgress(Users user, Mission mission) {
         LocalDate thisWeekStartDate = getThisWeekStartDate();
         MyMissionProgress progress = myMissionProgRepository
@@ -81,10 +86,12 @@ public class ExpIncServiceImpl {
         myMissionProgRepository.save(progress);
     }
 
+    // 이번주 시작 일자 계산
     private LocalDate getThisWeekStartDate() {
         return LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
     }
 
+    // 레벨업 경험치 설정
     private int getLevelUpThreshold(int level) {
         return 50 + (level - 1) * 20;
     }

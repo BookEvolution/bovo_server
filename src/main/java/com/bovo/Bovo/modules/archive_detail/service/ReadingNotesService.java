@@ -28,16 +28,30 @@ public class ReadingNotesService {
     //메모 저장하기
     @Transactional
     public void save(Integer bookId, Integer userId, MemoCreateRequestDto requestDto){
+
+        getMinOrder(bookId, userId);
+
         ReadingNotes memo = ReadingNotes.builder()
                 .myBooks(myBooksService.myBookInfo(bookId, userId))
                 .users(usersRepository.findOne(userId))
                 .memoQuestion(requestDto.getMemoQ())
                 .memoAnswer(requestDto.getMemoA())
                 .recentlyCorrectionDate(myBooksService.stringToLocalDate(requestDto.getMemoDate()))
-                .order(0)
+                .order(getMinOrder(bookId, userId) - 1)
                 .build();
         readingNotesRepository.save(memo);
     }
+
+    private int getMinOrder(Integer bookId, Integer userId) {
+        List<ReadingNotes> notesList = myBooksService.myBookInfo(bookId, userId).getReadingNotesList();
+
+        return notesList
+                .stream()
+                .map(ReadingNotes::getOrder)
+                .min(Integer::compareTo)
+                .orElse(0);
+    }
+
     //책에서 메모리스트 가져오기
     public List<ReadingNotes> memosInfoByBook(Integer bookId, Integer userId) {
         MyBooks book = myBooksService.myBookInfo(bookId, userId);

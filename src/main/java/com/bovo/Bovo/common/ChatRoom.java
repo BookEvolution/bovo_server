@@ -51,7 +51,7 @@ public class ChatRoom {
     @Column(name = "book_name", length = 100, nullable = false)
     private String bookName;
 
-    @Column(name = "book_cover", length = 100)
+    @Column(name = "book_cover", length = 255)
     private String bookCover;
 
     @Column(name = "book_author", length = 100, nullable = false)

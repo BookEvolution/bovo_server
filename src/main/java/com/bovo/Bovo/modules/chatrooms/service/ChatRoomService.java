@@ -105,7 +105,7 @@ public class ChatRoomService {
                         .limitPeople(chatRoom.getMaxRecruiting())
                         .currentPeople(participationRepository.findByChatRoom(chatRoom).size())
                         .build())
-                .admin(false)
+                .admin(chatRoom.getAdmin())
                 .build();
     }
 
@@ -124,6 +124,7 @@ public class ChatRoomService {
                 .challengeEndDate(chatInfo.getChallengeEndDate())
                 .isSecret(setSecret(chatInfo))
                 .secretQuestion(chatInfo.getSecretQuestion())
+                .admin("false")
                 .build();
 
         chatRoom = chatRoomRepository.save(chatRoom);
@@ -150,9 +151,9 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.getReferenceById(chatRoomId);
 
         //권한 있는지 확인
-        if(validationJoinChatroom(user, chatRoom)){
-            return;
-        }
+//        if(validationJoinChatroom(user, chatRoom)){
+//            return;
+//        }
 
         //방장과 답변 비교
         if(!isLeader){
@@ -246,7 +247,7 @@ public class ChatRoomService {
                     .message(chatMessage.getMessage())
                     .chatRoomId(chatMessage.getChatRoom().getId())
                     .nickname(chatMessage.getUsers().getNickname())
-                    .userId(chatMessage.getUsers().getId())
+                    .email(chatMessage.getUsers().getEmail())
                     .build();
 
             responseDTO.add(chatMessageDTO);

@@ -57,6 +57,8 @@ public class ChatRoom {
     @Column(name = "book_author", length = 100, nullable = false)
     private String bookAuthor;
 
+    private String admin;
+
     // ENUM 타입 정의
     public enum SecretType {
         YES, NO

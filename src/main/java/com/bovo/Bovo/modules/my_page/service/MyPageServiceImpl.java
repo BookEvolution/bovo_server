@@ -48,6 +48,7 @@ public class MyPageServiceImpl implements MyPageService {
         boolean n_update = true;
         boolean w_update = true;
         if (profile_picture != null) {
+            System.out.println("Service - profile_picture = " + profile_picture);
             p_update = myPageRepository.newProfilePictureUpdate(profile_picture, userId);
         }
         if (nickname != null) {

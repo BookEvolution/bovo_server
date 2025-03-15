@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewProfileUpdateDto {
     @NotNull(message = "")
-    private String profile_picture;
+    private String profile_pictures;
     @NotNull(message = "")
     private String nickname;
     private String password;

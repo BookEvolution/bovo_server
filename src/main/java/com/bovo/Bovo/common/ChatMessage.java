@@ -31,8 +31,7 @@ public class ChatMessage {
     private String message; // 메시지 내용
     private LocalDateTime timestamp; // 메시지 전송 시간
 
-    @Enumerated(EnumType.STRING)
-    private MessageType type; // ENTER, CHAT, LEAVE 타입 구분
+    private String type; // ENTER, CHAT, LEAVE 타입 구분
 
     public enum MessageType {
         ENTER, CHAT, LEAVE

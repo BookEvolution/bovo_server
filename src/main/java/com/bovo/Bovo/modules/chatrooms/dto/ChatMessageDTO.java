@@ -14,7 +14,7 @@ public class ChatMessageDTO {
     private String message;
     private LocalDateTime timestamp;
     private String messageType;
-    private Integer userId;  // 🔹 Users 엔티티의 ID만 포함
+    private String email;  // 🔹 Users 엔티티의 ID만 포함
     private Integer chatRoomId; // 🔹 ChatRoom 엔티티의 ID만 포함
     private String nickname; // 🔹 추가적으로 사용자 닉네임 포함
 }

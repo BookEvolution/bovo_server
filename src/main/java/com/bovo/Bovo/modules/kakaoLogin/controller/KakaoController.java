@@ -79,6 +79,8 @@ public class KakaoController {
                 createdKakaoTokenDto.getKakaoRefreshToken(),
                 KakaoUserId);
 
+        kakaoService.SaveKakaoNewRewards(users);
+
         // 생성된 userId로 로컬 토큰 발급, 디비 저장
         Integer userId = users.getId();
         GenerateLocalTokenDto generateLocalTokenDto = kakaoService.GenerateLocalToken(userId);

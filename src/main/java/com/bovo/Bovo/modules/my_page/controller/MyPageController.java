@@ -129,8 +129,9 @@ public class MyPageController {
     @PutMapping("/profile/update")
     public ResponseEntity<defResponseDto> updateProfile(@RequestBody NewProfileUpdateDto newProfileUpdateDto, @AuthenticationPrincipal AuthenticatedUserId user) {
         Integer userId = user.getUserId();
+        System.out.println("Controller - profile_picture = " + newProfileUpdateDto.getProfile_pictures());
         if (!myPageService.newProfileUpdate(
-                newProfileUpdateDto.getProfile_picture(),
+                newProfileUpdateDto.getProfile_pictures(),
                 newProfileUpdateDto.getNickname(),
                 newProfileUpdateDto.getPassword(), userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)

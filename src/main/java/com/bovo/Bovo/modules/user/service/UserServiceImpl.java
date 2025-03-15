@@ -1,9 +1,9 @@
 package com.bovo.Bovo.modules.user.service;
 
-import com.bovo.Bovo.common.Users;
-import com.bovo.Bovo.common.User_Auth;
+import com.bovo.Bovo.common.*;
 import com.bovo.Bovo.modules.user.dto.request.LoginDto;
 import com.bovo.Bovo.modules.user.dto.request.SignupDto;
+import com.bovo.Bovo.modules.user.repository.RewardsRepository;
 import com.bovo.Bovo.modules.user.repository.UserAuthRepository;
 import com.bovo.Bovo.modules.user.repository.UserRepository;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
@@ -11,10 +11,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
+    private final RewardsRepository rewardsRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -25,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository,
                            UserAuthRepository userAuthRepository,
+                           RewardsRepository rewardsRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            JwtProvider jwtProvider,
                            @Value("${jwt.secretkey}") String secretKey,
@@ -32,6 +38,7 @@ public class UserServiceImpl implements UserService {
                            @Value("${jwt.expiredRefreshToken}") Long expireTimeRefresh) {
         this.userRepository = userRepository;
         this.userAuthRepository = userAuthRepository;
+        this.rewardsRepository = rewardsRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtProvider = jwtProvider;
         this.SecretKey = secretKey;
@@ -58,6 +65,32 @@ public class UserServiceImpl implements UserService {
 
         User_Auth usera = User_Auth.createLocalUser(user, signupDto.getEmail(), bCryptPasswordEncoder.encode(signupDto.getPassword()));
         userAuthRepository.saveUserAuth(usera);
+
+        Medal medal = Medal.builder()
+                .users(user)
+                .medalType(MedalType.NONE)
+                .weekStartDate(LocalDateTime.now())
+                .medalAt(LocalDateTime.now())
+                .build();
+        rewardsRepository.saveMedal(medal);
+
+        List<Mission> missions = rewardsRepository.findAllMissions(); // 모든 미션 불러오기
+        System.out.println("미션 개수: " + missions.size());
+
+        for (Mission mission : missions) {
+            MyMissionProgress missionProgress = MyMissionProgress.builder()
+                    .users(user)
+                    .mission(mission)
+                    .missionCnt(0)
+                    .missionAt(null)
+                    .isCompleted(false)
+                    .isGoalExpGiven(false)
+                    .completeAt(null)
+                    .weekStartDate(null)
+                    .build();
+
+            rewardsRepository.saveMyMissionProgress(missionProgress);
+        }
     }
 
     @Override

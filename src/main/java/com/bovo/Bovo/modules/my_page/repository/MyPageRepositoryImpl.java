@@ -63,9 +63,11 @@ public class MyPageRepositoryImpl implements MyPageRepository {
 
     @Override
     public boolean newProfilePictureUpdate(String profile_picture, Integer userId) {
+        System.out.println("Repository - profile_picture = " + profile_picture);
         Users users = em.find(Users.class, userId);
         if (users != null) {
             users.setProfile_picture(profile_picture);
+            em.merge(users);
             return true;
         }
         return false;
@@ -76,6 +78,7 @@ public class MyPageRepositoryImpl implements MyPageRepository {
         Users users = em.find(Users.class, userId);
         if (users != null) {
             users.setNickname(nickname);
+            em.merge(users);
             return true;
         }
         return false;
@@ -86,6 +89,7 @@ public class MyPageRepositoryImpl implements MyPageRepository {
         User_Auth usera = em.find(User_Auth.class, userId);
         if (usera != null) {
             usera.setPassword(password);
+            em.merge(usera);
             return true;
         }
         return false;

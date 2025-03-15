@@ -2,6 +2,8 @@ package com.bovo.Bovo.common;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "participation")
 @Getter
@@ -29,6 +31,9 @@ public class Participation {
 
     @Column(name = "answer", length = 255)
     private String answer; // 비밀방 답변
+
+    @Column(name = "participation_Time")
+    private LocalDate participationTime;
 
 
     // ENUM 타입 정의

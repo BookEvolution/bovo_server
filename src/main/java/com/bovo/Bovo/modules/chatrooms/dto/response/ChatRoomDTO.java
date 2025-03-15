@@ -33,7 +33,7 @@ public class ChatRoomDTO {
     private GroupInfo groupInfo;
 
     @JsonProperty("admin")
-    private boolean admin;
+    private String admin;
 
 
 

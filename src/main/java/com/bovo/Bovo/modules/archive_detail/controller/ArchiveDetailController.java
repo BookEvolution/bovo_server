@@ -69,7 +69,7 @@ public class ArchiveDetailController {
     public MemoCreateResponseDto addMemo(@PathVariable("book_id") Integer bookId, @RequestBody MemoCreateRequestDto requestDto, @AuthenticationPrincipal AuthenticatedUserId user) {
         int userId = user.getUserId();
         readingNotesService.save(bookId, userId, requestDto);
-        expIncService.updateExp(userId, 2);
+        expIncService.updateExp(userId, 4);
         return new MemoCreateResponseDto("기록 완료");
     }
 

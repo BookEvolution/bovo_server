@@ -29,16 +29,16 @@ public class RewardsController {
 
     // 퀘스트 달성시 기본 및 추가 경험치 지급
     @PutMapping("/exp-increase")
-    public ResponseEntity<ExpIncResponseDto> updateGoalExp(
+    public ResponseEntity<ExpIncResponseDto> completeQuest(
             @AuthenticationPrincipal AuthenticatedUserId user,
             @RequestBody ExpIncRequestDto request) {
 
+        System.out.println("@@@@@@@@@@ exp-increase 실행");
         Integer userId = user.getUserId();
         Integer missionId = request.getMissionId();
 
         expIncService.completeQuest(userId, missionId);
         ExpIncResponseDto response = new ExpIncResponseDto(200);
-
         return ResponseEntity.ok(response);
     }
 }

@@ -8,6 +8,7 @@ import com.bovo.Bovo.modules.chatrooms.dto.response.ChatRoomListDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.response.GetChatInfoModalDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.response.MyChatRoomResponseDTO;
 import com.bovo.Bovo.modules.chatrooms.service.ChatRoomService;
+import com.bovo.Bovo.modules.rewards.service.ExpIncService;
 import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ChatroomController {
 
 
     private final ChatRoomService chatRoomService;
+    private final ExpIncService expIncService;
 
     @GetMapping
     public ChatRoomListDTO getAllChatroomList() {
@@ -75,6 +77,7 @@ public class ChatroomController {
 
         //이전 채팅 메시지 전송
         List<ChatMessageDTO> messages = chatRoomService.getMessages(roomId);
+        expIncService.updateExp(userId, 2);
 
         return ResponseEntity.ok(messages);
     }

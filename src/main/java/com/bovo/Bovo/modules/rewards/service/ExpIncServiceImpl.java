@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 @Service
@@ -22,6 +23,7 @@ public class ExpIncServiceImpl implements ExpIncService {
     private final RewardsUserRepository rewardsUserRepository;
     private final MissionRepository missionRepository;
     private final MyMissionProgRepository myMissionProgRepository;
+    private final MedalService medalService;
 
     @Override
     @Transactional
@@ -29,21 +31,32 @@ public class ExpIncServiceImpl implements ExpIncService {
         // 미션, 유저, 미션 현황 조회
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new IllegalArgumentException("Mission not found with id: " + missionId));
+        System.out.println("mission");
 
         Users user = rewardsUserRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        System.out.println("user");
 
         MyMissionProgress progress = myMissionProgRepository.findByUsersIdAndMissionId(userId, missionId)
-                .orElseGet(() -> createNewMissionProgress(user, mission));
+                .orElseThrow(() -> new IllegalArgumentException("Mission progress not found for user: " + userId));
+        System.out.println("progress");
+
 
         // 미션 카운트 증가 및 기본 경험치 지급
         updateMissionProgress(progress, mission);
+        System.out.println("updateMissionProgress");
 
         // 유저 경험치 및 레벨 업데이트
         updateUserExp(user, mission.getExpPerMission());
+        System.out.println("updateUserExp");
 
         // 출석 체크 추가 (오늘 날짜 기준)
         checkAttendance(userId);
+        System.out.println("checkAttendance");
+
+        // 메달 지급
+        medalService.assignWeeklyMedals();
+        System.out.println("assignWeeklyMedals");
     }
 
     @Override
@@ -132,30 +145,24 @@ public class ExpIncServiceImpl implements ExpIncService {
         return myMissionProgRepository.save(progress);
     }
 
-    // 출석 체크 (중복 체크 방지)
+    // 출석 체크
     private void checkAttendance(Integer userId) {
-        LocalDate today = LocalDate.now();
 
-        // 이미 오늘 출석했는지 확인
-        boolean alreadyChecked = myMissionProgRepository.existsByUsersIdAndWeekStartDate(userId, today);
+        System.out.println("진입 중");
+        MyMissionProgress attendanceProgress = myMissionProgRepository.findByUsersIdAndMissionId(userId, 1)
+                .orElseThrow(() -> new IllegalArgumentException("Mission progress not found for mission: " + 1));
 
-        if (alreadyChecked) {
-            return;
+        // 오늘 이미 수행한 미션이면 중복 처리 방지
+        if (attendanceProgress.getCompleteAt() != null) {
+            if (attendanceProgress.getCompleteAt().toLocalDate().isEqual(LocalDate.now())) {
+                return;
+            }
         }
 
-        Users user = rewardsUserRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-
-        Mission attendanceMission = missionRepository.findByMissionType(MissionType.ATTENDANCE)
-                .orElseThrow(() -> new IllegalStateException("Attendance mission not found"));
-
-        MyMissionProgress attendanceProgress = MyMissionProgress.builder()
-                .users(user)
-                .mission(attendanceMission) // 출석 미션
-                .missionCnt(1) // 출석 횟수 1 증가
-                .weekStartDate(today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))) // 주 시작 기준
-                .build();
-
+        int newMissionCnt = attendanceProgress.getMissionCnt() + 1;
+        attendanceProgress.setMissionCnt(newMissionCnt);
+        attendanceProgress.setCompleteAt(LocalDateTime.now());
         myMissionProgRepository.save(attendanceProgress);
+        System.out.println("진입 후");
     }
 }

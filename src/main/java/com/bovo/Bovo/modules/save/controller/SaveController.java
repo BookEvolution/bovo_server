@@ -1,5 +1,6 @@
 package com.bovo.Bovo.modules.save.controller;
 
+import com.bovo.Bovo.modules.rewards.service.ExpIncService;
 import com.bovo.Bovo.modules.save.dto.request.SaveBookRequestDto;
 import com.bovo.Bovo.modules.save.dto.response.SaveBookResponseDto;
 import com.bovo.Bovo.modules.save.service.SaveBookService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SaveController {
     private final SaveBookService saveBookService;
+    private final ExpIncService expIncService;
 
     @PostMapping
     public ResponseEntity<?> saveBook(@AuthenticationPrincipal AuthenticatedUserId user,
@@ -36,6 +38,7 @@ public class SaveController {
             return ResponseEntity.status(HttpStatus.OK).body(responseDto);
         }
 
+        expIncService.updateExp(user.getUserId(), 3);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 }

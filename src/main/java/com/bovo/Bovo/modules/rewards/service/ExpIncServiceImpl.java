@@ -1,7 +1,6 @@
 package com.bovo.Bovo.modules.rewards.service;
 
 import com.bovo.Bovo.common.Mission;
-import com.bovo.Bovo.common.MissionType;
 import com.bovo.Bovo.common.MyMissionProgress;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.rewards.repository.MissionRepository;

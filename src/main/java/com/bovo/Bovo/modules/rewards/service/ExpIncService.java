@@ -8,11 +8,13 @@ public interface ExpIncService {
 
     void updateExp(Integer userId, Integer missionId);
 
-    int updateMissionProgress(MyMissionProgress progress, Mission mission);
+    void updateMissionProgress(MyMissionProgress progress, Mission mission);
 
     void updateUserExp(Users user, int expGained);
 
-    int updateLevel(int currentLevel, int exp);
+    void updateLevel(Users user);
 
     int getLevelUpThreshold(int level);
+
+    void completeQuest(Integer userId, Integer missionId);
 }

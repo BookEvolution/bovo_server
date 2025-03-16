@@ -36,7 +36,7 @@ public class RewardsController {
         Integer userId = user.getUserId();
         Integer missionId = request.getMissionId();
 
-        expIncService.updateExp(userId, missionId);
+        expIncService.completeQuest(userId, missionId);
         ExpIncResponseDto response = new ExpIncResponseDto(200);
 
         return ResponseEntity.ok(response);

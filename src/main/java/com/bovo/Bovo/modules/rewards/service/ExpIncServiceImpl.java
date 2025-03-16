@@ -1,6 +1,7 @@
 package com.bovo.Bovo.modules.rewards.service;
 
 import com.bovo.Bovo.common.Mission;
+import com.bovo.Bovo.common.MissionType;
 import com.bovo.Bovo.common.MyMissionProgress;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.rewards.repository.MissionRepository;
@@ -35,30 +36,55 @@ public class ExpIncServiceImpl implements ExpIncService {
         MyMissionProgress progress = myMissionProgRepository.findByUsersIdAndMissionId(userId, missionId)
                 .orElseGet(() -> createNewMissionProgress(user, mission));
 
-        // 미션 진행 및 경험치 증가 계산
-        int expGained = updateMissionProgress(progress, mission);
+        // 미션 카운트 증가 및 기본 경험치 지급
+        updateMissionProgress(progress, mission);
 
         // 유저 경험치 및 레벨 업데이트
-        updateUserExp(user, expGained);
+        updateUserExp(user, mission.getExpPerMission());
+
+        // 출석 체크 추가 (오늘 날짜 기준)
+        checkAttendance(userId);
     }
 
     @Override
     @Transactional
-    // 미션 수행 횟수 증가 및 목표 달성 경험치 계산
-    public int updateMissionProgress(MyMissionProgress progress, Mission mission) {
-        int newMissionCnt = progress.getMissionCnt() + 1;
-        int baseExp = mission.getExpPerMission();
-        int goalExp = mission.getExpPerGoal();
-        int goalCnt = mission.getGoalCnt();
+    public void completeQuest(Integer userId, Integer missionId) {
+        // 미션, 유저, 진행 데이터 조회
+        Mission mission = missionRepository.findById(missionId)
+                .orElseThrow(() -> new IllegalArgumentException("Mission not found with id: " + missionId));
 
-        int totalExpGained = baseExp;
-        if (newMissionCnt >= goalCnt) {
-            totalExpGained += goalExp;
+        Users user = rewardsUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        MyMissionProgress progress = myMissionProgRepository.findByUsersIdAndMissionId(userId, missionId)
+                .orElseThrow(() -> new IllegalArgumentException("Mission progress not found for user: " + userId));
+
+        // 목표 경험치 지급 여부 먼저 체크
+        if (progress.isGoalExpGiven()) {
+            return; // 이미 지급된 경우 추가 처리 없이 종료
         }
 
-        progress.setMissionCnt(newMissionCnt);
+        // 목표 경험치 지급
+        updateUserExp(user, mission.getExpPerGoal());
+        progress.setGoalExpGiven(true);
+
         myMissionProgRepository.save(progress);
-        return totalExpGained;
+    }
+
+    @Override
+    @Transactional
+    // 내 미션 현황 업데이트
+    public void updateMissionProgress(MyMissionProgress progress, Mission mission) {
+        // 미션 카운트 증가
+        int newMissionCnt = progress.getMissionCnt() + 1;
+        progress.setMissionCnt(newMissionCnt);
+
+        // 목표 카운트 도달 여부 확인 (중복 저장 방지)
+        if (newMissionCnt >= mission.getGoalCnt() && !progress.isCompleted()) {
+            progress.setCompleted(true);
+        }
+
+        myMissionProgRepository.save(progress);
     }
 
     @Override
@@ -66,23 +92,26 @@ public class ExpIncServiceImpl implements ExpIncService {
     // 유저 경험치 증가 및 레벨업 처리
     public void updateUserExp(Users user, int expGained) {
         int newExp = user.getExp() + expGained;
-        int newLevel = updateLevel(user.getLevel(), newExp);
 
         user.setExp(newExp);
-        user.setLevel(newLevel);
+        updateLevel(user);
+
         rewardsUserRepository.save(user);
     }
 
     @Override
     @Transactional
-    // 레벨업 로직 (경험치 기준 초과 시 연속 레벨업 가능)
-    public int updateLevel(int currentLevel, int exp) {
-        int level = currentLevel;
-        while (exp >= getLevelUpThreshold(level)) {
-            exp -= getLevelUpThreshold(level);
-            level++;
+    public void updateLevel(Users user) {
+        int currentExp = user.getExp();
+        int currentLevel = user.getLevel();
+
+        while (currentExp >= getLevelUpThreshold(currentLevel)) {
+            currentExp -= getLevelUpThreshold(currentLevel);
+            currentLevel++;
         }
-        return level;
+
+        user.setExp(currentExp);
+        user.setLevel(currentLevel);
     }
 
     @Override
@@ -101,5 +130,32 @@ public class ExpIncServiceImpl implements ExpIncService {
                 .build();
 
         return myMissionProgRepository.save(progress);
+    }
+
+    // 출석 체크 (중복 체크 방지)
+    private void checkAttendance(Integer userId) {
+        LocalDate today = LocalDate.now();
+
+        // 이미 오늘 출석했는지 확인
+        boolean alreadyChecked = myMissionProgRepository.existsByUsersIdAndWeekStartDate(userId, today);
+
+        if (alreadyChecked) {
+            return;
+        }
+
+        Users user = rewardsUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        Mission attendanceMission = missionRepository.findByMissionType(MissionType.ATTENDANCE)
+                .orElseThrow(() -> new IllegalStateException("Attendance mission not found"));
+
+        MyMissionProgress attendanceProgress = MyMissionProgress.builder()
+                .users(user)
+                .mission(attendanceMission) // 출석 미션
+                .missionCnt(1) // 출석 횟수 1 증가
+                .weekStartDate(today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))) // 주 시작 기준
+                .build();
+
+        myMissionProgRepository.save(attendanceProgress);
     }
 }

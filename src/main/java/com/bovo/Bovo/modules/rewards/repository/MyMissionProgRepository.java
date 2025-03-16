@@ -21,4 +21,7 @@ public interface MyMissionProgRepository extends JpaRepository<MyMissionProgress
 
     // 특정 일자 이전 데이터 삭제
     void deleteAllByWeekStartDateBefore(LocalDate thresholdDate);
+
+    // 오늘 출석체크 여부
+    boolean existsByUsersIdAndWeekStartDate(Integer userId, LocalDate today);
 }

@@ -31,32 +31,24 @@ public class ExpIncServiceImpl implements ExpIncService {
         // 미션, 유저, 미션 현황 조회
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new IllegalArgumentException("Mission not found with id: " + missionId));
-        System.out.println("mission");
 
         Users user = rewardsUserRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-        System.out.println("user");
 
         MyMissionProgress progress = myMissionProgRepository.findByUsersIdAndMissionId(userId, missionId)
                 .orElseThrow(() -> new IllegalArgumentException("Mission progress not found for user: " + userId));
-        System.out.println("progress");
-
 
         // 미션 카운트 증가 및 기본 경험치 지급
         updateMissionProgress(progress, mission);
-        System.out.println("updateMissionProgress");
 
         // 유저 경험치 및 레벨 업데이트
         updateUserExp(user, mission.getExpPerMission());
-        System.out.println("updateUserExp");
 
         // 출석 체크 추가 (오늘 날짜 기준)
         checkAttendance(userId);
-        System.out.println("checkAttendance");
 
         // 메달 지급
         medalService.assignWeeklyMedals();
-        System.out.println("assignWeeklyMedals");
     }
 
     @Override
@@ -130,7 +122,7 @@ public class ExpIncServiceImpl implements ExpIncService {
     @Override
     // 레벨업 경험치 기준 계산 (선형 증가)
     public int getLevelUpThreshold(int level) {
-        return 50 + (level - 1) * 20;
+        return 100;
     }
 
     // 새로운 미션 진행 데이터 생성
@@ -148,7 +140,6 @@ public class ExpIncServiceImpl implements ExpIncService {
     // 출석 체크
     private void checkAttendance(Integer userId) {
 
-        System.out.println("진입 중");
         MyMissionProgress attendanceProgress = myMissionProgRepository.findByUsersIdAndMissionId(userId, 1)
                 .orElseThrow(() -> new IllegalArgumentException("Mission progress not found for mission: " + 1));
 
@@ -163,6 +154,5 @@ public class ExpIncServiceImpl implements ExpIncService {
         attendanceProgress.setMissionCnt(newMissionCnt);
         attendanceProgress.setCompleteAt(LocalDateTime.now());
         myMissionProgRepository.save(attendanceProgress);
-        System.out.println("진입 후");
     }
 }

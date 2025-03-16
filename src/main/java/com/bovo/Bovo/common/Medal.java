@@ -1,15 +1,14 @@
 package com.bovo.Bovo.common;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "medal")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

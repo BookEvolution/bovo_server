@@ -10,6 +10,7 @@ import com.bovo.Bovo.modules.archive_detail.dto.request.MemoUpdateRequestDto;
 import com.bovo.Bovo.modules.archive_detail.dto.response.*;
 import com.bovo.Bovo.modules.archive_detail.service.ArchiveMyBooksService;
 import com.bovo.Bovo.modules.archive_detail.service.ReadingNotesService;
+import com.bovo.Bovo.modules.rewards.service.ExpIncService;
 import com.bovo.Bovo.modules.user.dto.security.AuthenticatedUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +25,7 @@ public class ArchiveDetailController {
 
     private final ArchiveMyBooksService myBooksService;
     private final ReadingNotesService readingNotesService;
+    private final ExpIncService expIncService;
     // 임시 테스트
 //    @GetMapping("/{book_id}")
 //    public String getBookPage(@PathVariable("book_id") int bookId) {
@@ -67,6 +69,7 @@ public class ArchiveDetailController {
     public MemoCreateResponseDto addMemo(@PathVariable("book_id") Integer bookId, @RequestBody MemoCreateRequestDto requestDto, @AuthenticationPrincipal AuthenticatedUserId user) {
         int userId = user.getUserId();
         readingNotesService.save(bookId, userId, requestDto);
+        expIncService.updateExp(userId, 2);
         return new MemoCreateResponseDto("기록 완료");
     }
 

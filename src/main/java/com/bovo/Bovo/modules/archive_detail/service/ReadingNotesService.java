@@ -29,8 +29,6 @@ public class ReadingNotesService {
     @Transactional
     public void save(Integer bookId, Integer userId, MemoCreateRequestDto requestDto){
 
-        getMinOrder(bookId, userId);
-
         ReadingNotes memo = ReadingNotes.builder()
                 .myBooks(myBooksService.myBookInfo(bookId, userId))
                 .users(usersRepository.findOne(userId))

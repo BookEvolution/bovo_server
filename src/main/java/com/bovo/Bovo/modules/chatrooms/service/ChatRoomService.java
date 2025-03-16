@@ -1,9 +1,6 @@
 package com.bovo.Bovo.modules.chatrooms.service;
 
-import com.bovo.Bovo.common.ChatMessage;
-import com.bovo.Bovo.common.ChatRoom;
-import com.bovo.Bovo.common.Participation;
-import com.bovo.Bovo.common.Users;
+import com.bovo.Bovo.common.*;
 import com.bovo.Bovo.modules.chatrooms.dto.ChatMessageDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.request.CreateChatRoomRequestDTO;
 import com.bovo.Bovo.modules.chatrooms.dto.response.*;
@@ -110,7 +107,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void createChatRoom(Integer userId, CreateChatRoomRequestDTO requestDTO) {
+    public int createChatRoom(Integer userId, CreateChatRoomRequestDTO requestDTO) {
         CreateChatRoomRequestDTO.BookInfoDTO bookInfo = requestDTO.getBookInfo();
         CreateChatRoomRequestDTO.ChatInfoDTO chatInfo = requestDTO.getChatInfo();
         ChatRoom chatRoom = ChatRoom.builder()
@@ -131,6 +128,8 @@ public class ChatRoomService {
 
         //유저 찾고 participation 저장
         joinChatroom(userId, chatRoom.getId(), chatInfo.getSecretAnswer(), true);
+
+        return chatRoom.getId();
     }
 
     private ChatRoom.SecretType setSecret(CreateChatRoomRequestDTO.ChatInfoDTO chatInfo) {
@@ -151,9 +150,9 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.getReferenceById(chatRoomId);
 
         //권한 있는지 확인
-//        if(validationJoinChatroom(user, chatRoom)){
-//            return;
-//        }
+        if(validationJoinChatroom(user, chatRoom)){
+            return;
+        }
 
         //방장과 답변 비교
         if(!isLeader){
@@ -187,7 +186,9 @@ public class ChatRoomService {
 
     @Transactional
     public void leaveChatroom(Integer userId, Integer roomId) {
+        Optional<Participation> byUsersAndChatRoom = participationRepository.findByUsersAndChatRoom(userRepository.getReferenceById(userId), chatRoomRepository.getReferenceById(roomId));
 
+        participationRepository.delete(byUsersAndChatRoom.orElseThrow());
     }
 
     private boolean validationJoinChatroom(Users user, ChatRoom chatRoom){
@@ -259,4 +260,28 @@ public class ChatRoomService {
     }
 
 
+    public List<ChatMemoDTO> getChatMemos(Integer userId) {
+        List<ReadingNotes> readingNotes = userRepository.getReferenceById(userId).getReadingNotes();
+        List<ChatMemoDTO> chatMemoDTOList = new ArrayList<>();
+        for (ReadingNotes readingNote : readingNotes) {
+            ChatMemoDTO chatMemoDTO = new ChatMemoDTO(readingNote.getRecentlyCorrectionDate(), readingNote.getMemoQuestion(), readingNote.getMemoAnswer());
+
+            chatMemoDTOList.add(chatMemoDTO);
+        }
+        return chatMemoDTOList;
+    }
+
+    public List<ChatUserDTO> getChatUsers(Integer roomId) {
+        ChatRoom chatRoom = chatRoomRepository.getReferenceById(roomId);
+        List<Participation> participations = participationRepository.findByChatRoom(chatRoom);
+        List<ChatUserDTO> chatUserDTOList = new ArrayList<>();
+        for (Participation participation : participations) {
+            Users user = participation.getUsers();
+
+            ChatUserDTO chatUserDTO = new ChatUserDTO(user.getProfile_picture(), user.getEmail(), user.getEmail());
+            chatUserDTOList.add(chatUserDTO);
+        }
+
+        return chatUserDTOList;
+    }
 }

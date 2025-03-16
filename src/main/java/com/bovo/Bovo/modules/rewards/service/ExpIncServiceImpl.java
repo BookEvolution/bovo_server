@@ -1,6 +1,7 @@
 package com.bovo.Bovo.modules.rewards.service;
 
 import com.bovo.Bovo.common.Mission;
+import com.bovo.Bovo.common.MissionType;
 import com.bovo.Bovo.common.MyMissionProgress;
 import com.bovo.Bovo.common.Users;
 import com.bovo.Bovo.modules.rewards.repository.MissionRepository;
@@ -139,6 +140,14 @@ public class ExpIncServiceImpl implements ExpIncService {
     // 출석 체크
     private void checkAttendance(Integer userId) {
 
+        Users user = rewardsUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for ID: " + userId));
+
+
+        Mission mission = missionRepository.findByMissionType(MissionType.ATTENDANCE)
+                .orElseThrow(() -> new IllegalArgumentException("Mission not found for type: " + MissionType.ATTENDANCE));
+
+
         MyMissionProgress attendanceProgress = myMissionProgRepository.findByUsersIdAndMissionId(userId, 1)
                 .orElseThrow(() -> new IllegalArgumentException("Mission progress not found for mission: " + 1));
 
@@ -150,8 +159,11 @@ public class ExpIncServiceImpl implements ExpIncService {
         }
 
         int newMissionCnt = attendanceProgress.getMissionCnt() + 1;
+        updateUserExp(user, mission.getExpPerMission());
+
         attendanceProgress.setMissionCnt(newMissionCnt);
         attendanceProgress.setCompleteAt(LocalDateTime.now());
+
         myMissionProgRepository.save(attendanceProgress);
     }
 }

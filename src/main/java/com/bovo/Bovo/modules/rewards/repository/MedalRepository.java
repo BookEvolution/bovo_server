@@ -2,6 +2,7 @@ package com.bovo.Bovo.modules.rewards.repository;
 
 import com.bovo.Bovo.common.Medal;
 import com.bovo.Bovo.common.MedalType;
+import com.bovo.Bovo.common.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,7 @@ public interface MedalRepository extends JpaRepository<Medal, Integer> {
 
     // userId로 내 훈장 조회
     Optional<Medal> findByUsers_Id(Integer userId);
+    Optional<Medal> findByUsers(Users users);
 
     @Modifying
     @Query("UPDATE Medal m SET m.medalType = :medalType, m.weekStartDate = :weekStartDate, m.medalAt = :medalAt WHERE m.users.id = :userId")

@@ -39,7 +39,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
+          port: 22
           script: |
             pkill -f ${{ secrets.JAR_NAME }} || echo "No existing server"
             nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/${{ secrets.JAR_NAME }} > /home/ubuntu/app/build/libs/log.txt 2>&1 &
-            sleep 4
+        

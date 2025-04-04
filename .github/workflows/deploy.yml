@@ -43,7 +43,14 @@ jobs:
           script: |
             ls
             pwd
-            echo "JAR_NAME: ${{ secrets.JAR_NAME }}"
-            pkill -f ${{ secrets.JAR_NAME }} || echo "No existing server"
+            echo "🔍 현재 실행 중인 서버 확인"
+            JAR=${{ secrets.JAR_NAME }}
+            PID=$(ps -ef | grep "$JAR" | grep -v grep | awk '{print $2}')
+            if [ -n "$PID" ]; then
+              echo "⚠️ 서버 프로세스 종료: $PID"
+              kill -9 $PID
+            else
+              echo "✅ 종료할 서버 없음"
+            fi
             nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/${{ secrets.JAR_NAME }} > /home/ubuntu/app/build/libs/log.txt 2>&1 &
 

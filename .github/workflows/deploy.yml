@@ -45,6 +45,7 @@ jobs:
             pwd
             echo "🔍 현재 실행 중인 서버 확인"
             JAR=${{ secrets.JAR_NAME }}
+            echo "$JAR"
             PID=$(ps -ef | grep "$JAR" | grep -v grep | awk '{print $2}')
             if [ -n "$PID" ]; then
               echo "⚠️ 서버 프로세스 종료: $PID"
@@ -53,4 +54,5 @@ jobs:
               echo "✅ 종료할 서버 없음"
             fi
             nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/${{ secrets.JAR_NAME }} > /home/ubuntu/app/build/libs/log.txt 2>&1 &
+            ps -ef | grep java
 

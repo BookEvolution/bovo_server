@@ -1,0 +1,41 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ feature/pjc_clean ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ 코드 체크아웃
+        uses: actions/checkout@v3
+
+      - name: ☕️ Java 23 설치
+        uses: actions/setup-java@v3
+        with:
+          java-version: '23'
+          distribution: 'temurin'
+
+      - name: 🛠 Gradle 빌드
+        run: ./gradlew clean build
+
+      - name: 📦 EC2에 jar 복사
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          source: build/libs/${{ secrets.JAR_NAME }}
+          target: /home/ubuntu/app/
+
+      - name: 🚀 EC2에서 서버 실행
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            pkill -f ${{ secrets.JAR_NAME }} || echo "No existing server"
+            nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/${{ secrets.JAR_NAME }} > /home/ubuntu/app/log.txt 2>&1 &

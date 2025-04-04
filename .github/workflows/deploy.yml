@@ -43,6 +43,6 @@ jobs:
           script: |
             ls
             pwd
-            pkill -f ${{ secrets.JAR_NAME }} || echo "No existing server"
-
+            JAR_NAME="${{ secrets.JAR_NAME }}"
+            pkill -f "$JAR_NAME" || echo "No existing server"
 

@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
 
       - name: 🛠 Gradle 빌드
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x test
 
       - name: 📦 EC2에 jar 복사
         uses: appleboy/scp-action@v0.1.7

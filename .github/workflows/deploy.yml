@@ -42,4 +42,4 @@ jobs:
           script: |
             pkill -f ${{ secrets.JAR_NAME }} || echo "No existing server"
             nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/${{ secrets.JAR_NAME }} > /home/ubuntu/app/build/libs/log.txt 2>&1 &
-            sleep 3
+            sleep 4

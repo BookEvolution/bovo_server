@@ -53,6 +53,17 @@ jobs:
             else
               echo "✅ 종료할 서버 없음"
             fi
-            nohup java -jar -Dspring.config.location=classpath:/application.yml,file:/home/ubuntu/app/build/libs/application-prod.properties -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/$JAR > /home/ubuntu/app/build/libs/log.txt 2>&1 &
-            ps -ef | grep java
+
+            
+            echo "🚀 새 서버 실행"
+            nohup java -jar \
+              -Dspring.config.location=file:/home/ubuntu/app/config/ \
+              -Dspring.profiles.active=prod \
+              /home/ubuntu/app/build/libs/$JAR \
+              > /home/ubuntu/app/build/libs/log.txt 2>&1 &
+
+            sleep 5
+
+            echo "📄 서버 로그 출력 시작 (log.txt)"
+            tail -n 100 /home/ubuntu/app/build/libs/log.txt
 

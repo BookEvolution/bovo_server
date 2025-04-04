@@ -53,6 +53,6 @@ jobs:
             else
               echo "✅ 종료할 서버 없음"
             fi
-            nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/${{ secrets.JAR_NAME }} > /home/ubuntu/app/build/libs/log.txt 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/$JAR > /home/ubuntu/app/build/libs/log.txt 2>&1 &
             ps -ef | grep java
 

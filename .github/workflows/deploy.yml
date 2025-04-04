@@ -21,6 +21,9 @@ jobs:
       - name: 🛠 Gradle 빌드
         run: ./gradlew clean build -x test
 
+      - name: 📁 빌드 결과 확인
+        run: ls -al build/libs
+
       - name: 📦 EC2에 jar 복사
         uses: appleboy/scp-action@v0.1.7
         with:

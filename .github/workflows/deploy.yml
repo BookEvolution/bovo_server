@@ -43,6 +43,7 @@ jobs:
           script: |
             ls
             pwd
-            pkill -f Bovo-0.0.1-SNAPSHOT.jar || echo "No existing server"
+            echo "JAR_NAME: ${{ secrets.JAR_NAME }}"
+            pkill -f ${{ secrets.JAR_NAME }} || echo "No existing server"
             nohup java -jar -Dspring.profiles.active=prod /home/ubuntu/app/build/libs/${{ secrets.JAR_NAME }} > /home/ubuntu/app/build/libs/log.txt 2>&1 &
 

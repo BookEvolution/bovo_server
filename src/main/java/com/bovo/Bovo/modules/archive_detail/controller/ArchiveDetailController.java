@@ -26,13 +26,6 @@ public class ArchiveDetailController {
     private final ArchiveMyBooksService myBooksService;
     private final ReadingNotesService readingNotesService;
     private final ExpIncService expIncService;
-    // 임시 테스트
-//    @GetMapping("/{book_id}")
-//    public String getBookPage(@PathVariable("book_id") int bookId) {
-//        System.out.println(bookId);
-//        return "asd";
-//    }
-
 
     // 기록 페이지 보기
     @GetMapping("/{book_id}")

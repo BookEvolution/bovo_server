@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -30,62 +32,61 @@ public class JwtFilter extends OncePerRequestFilter {
         this.jwtProvider = jwtProvider;
         this.socialUserDetailsService = socialUserDetailsService;
         this.kakaoService = kakaoService;
-        System.out.println("JwtFilter 생성됨!");
+        log.info("JwtFilter 생성");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String requestURI = request.getRequestURI();
-        System.out.println("현재 요청: " + requestURI);
+        log.info("현재 요청: {}", requestURI);
 
         if (request.getMethod().equals("OPTIONS")) {
-            System.out.println("🛠 [DEBUG] OPTIONS 요청 - CORS 프리플라이트 통과");
+            log.info("OPTIONS 요청 - CORS 프리플라이트 통과");
             filterChain.doFilter(request, response);
             return;
         }
 
         if (request.getMethod().equals("GET")) {
-            System.out.println("🛠 [DEBUG] GET 요청 도착: " + requestURI);
+            log.info("GET 요청 도착: {}", requestURI);
         }
 
         if (request.getMethod().equals("GET") && !requestURI.contains("/my-page")
                 && !requestURI.contains("/main") && !requestURI.contains("/search")
                 && !requestURI.contains("/book-info") && !requestURI.contains("/archive")
                 && !requestURI.contains("/chatroom") && !requestURI.contains("/rewards")) {
-            System.out.println("GET 요청 - JwtFilter 적용 안함: " + requestURI);
+            log.info("GET 요청 - JwtFilter 적용 안함: {}", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
 
 
         if (requestURI.equals("/") || requestURI.equals("/refresh") || requestURI.contains("/login") || requestURI.equals("/register") || requestURI.contains("/logout")) {
-            System.out.println("필터 적용 안함: " + requestURI);
+            log.info("JwtFilter 적용 안함: {}", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
 
-        System.out.println("필터 적용: " + requestURI);
+        log.info("JwtFilter 적용: {}", requestURI);
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println("서버가 받은 Authorization 헤더: " + request.getHeader(HttpHeaders.AUTHORIZATION));
-
-        logger.info("authorization: " + authorization);
+        log.debug("서버가 받은 Authorization 헤더: {}", authorization);
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            logger.error("authorization이 없음");
+            log.error("authorization이 없음");
             filterChain.doFilter(request, response);
             return;
         }
-        System.out.println(requestURI + ": 엑세스 토큰 존재");
+        log.info("{} : 엑세스 토큰 존재", requestURI);
 
         String accessToken = authorization.split(" ")[1];
-        System.out.println("[DEBUG] 서버가 받은 JWT: " + accessToken);
+        log.debug("서버가 받은 JWT: {}", accessToken);
         int result = jwtProvider.ExpiredAccessToken(accessToken, SecretKey);
         if (result == 200) {
-            System.out.println(requestURI + ": SecurityContextHolder 저장 시작");
+            log.info("{} : SecurityContextHolder 저장 시작", requestURI);
 
             Integer userId = jwtProvider.ExtractUserIdFromAccessToken(accessToken, SecretKey); // 토큰에서 userId 추출
             System.out.println("JWT에서 추출된 userId: " + userId);
+
 
             String provider = socialUserDetailsService.getProviderByUserId(userId);
 

@@ -2,6 +2,7 @@ package com.bovo.Bovo.config;
 
 import com.bovo.Bovo.modules.user.security.JwtFilter;
 import com.bovo.Bovo.modules.user.security.JwtProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity // Spring Security의 보안 설정을 활성화하는 역할
 public class securityConfig {
@@ -43,7 +45,7 @@ public class securityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("SecurityConfig 초기화 시작!");
+        log.info("SecurityConfig 초기화 시작");
         return http
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 기능 비활성화
@@ -52,7 +54,7 @@ public class securityConfig {
                 .authorizeHttpRequests(auth -> { // 요청(URL)에 대한 접근 제어 설정
 //                    auth.requestMatchers("/**", "/error", "/static/**").permitAll(); // 개발 중 임시 인증 없이 허용
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Preflight 요청 허용
-                    System.out.println("OPTIONS 요청 허용됨");
+                    log.info("OPTIONS 요청 허용");
                     auth.requestMatchers(HttpMethod.POST,"/","/login", "/my-page/logout", "/register", "/register/nickname", "/register/email", "/refresh", "/kakao/login").permitAll(); // 로그인과 회원가입 인증 없이 허용
                     auth.requestMatchers(HttpMethod.GET, "/my-page/**", "/main/**", "/search/**", "/book-info/**","/archive/**", "/chatrooms/**", "/rewards/**").authenticated();
                     auth.requestMatchers(HttpMethod.GET, "/**").permitAll();

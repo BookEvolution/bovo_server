@@ -35,7 +35,7 @@ public class MainRepositoryImpl implements MainRepository {
     @Override
     public RecentBookInfoDto getRecentBookInfoByUserId(Integer userId) {
         try {
-            RecentBookInfoDto recentBookInfoDto = em.createQuery("SELECT new com.bovo.Bovo.modules.main.dto.response.partial.RecentBookInfoDto(b.bookName, b.bookAuthor, b.bookCover, b.readingStartDate, b.bookScore) FROM MyBooks b WHERE b.users.id = :userId AND b.readingStatus = 'READING' ORDER BY b.recentlyCorrectionDate, b.id DESC"
+            RecentBookInfoDto recentBookInfoDto = em.createQuery("SELECT new com.bovo.Bovo.modules.main.dto.response.partial.RecentBookInfoDto(b.bookName, b.bookAuthor, b.bookCover, b.readingStartDate, b.bookScore) FROM MyBooks b WHERE b.users.id = :userId AND b.readingStatus = 'READING' ORDER BY b.recentlyCorrectionDate DESC, b.id DESC"
                             , RecentBookInfoDto.class)
                     .setParameter("userId", userId)
                     .setMaxResults(1)
@@ -51,7 +51,7 @@ public class MainRepositoryImpl implements MainRepository {
 
     @Override
     public Map<String, String> getBookListByUserId(Integer userId) {
-        List<BookNameDto> book = em.createQuery("SELECT new com.bovo.Bovo.modules.main.dto.response.partial.BookNameDto(b.bookName) FROM MyBooks b WHERE b.users.id=:userId AND b.readingStatus = 'COMPLETED' ORDER BY b.recentlyCorrectionDate, b.id DESC"
+        List<BookNameDto> book = em.createQuery("SELECT new com.bovo.Bovo.modules.main.dto.response.partial.BookNameDto(b.bookName) FROM MyBooks b WHERE b.users.id=:userId AND b.readingStatus = 'COMPLETED' ORDER BY b.recentlyCorrectionDate DESC, b.id DESC"
                         , BookNameDto.class)
                 .setParameter("userId", userId)
                 .setMaxResults(6)

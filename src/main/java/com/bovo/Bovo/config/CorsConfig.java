@@ -20,7 +20,7 @@ public class CorsConfig {
 //        CORS설정
 //        로컬: localhost:5173
 //        Netlify: https://bovo.netlify.app/
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "https://bovo.netlify.app"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "https://bovo.netlify.app", "http://bovo-client.s3-website.ap-northeast-2.amazonaws.com"));
         log.info("CORS Allowed Origins: {}", corsConfiguration.getAllowedOrigins());
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")); // 허용할 HTTP 메서드
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
